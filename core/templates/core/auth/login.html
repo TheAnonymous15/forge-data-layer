@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | ForgeForth Data Layer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .modal-backdrop { backdrop-filter: blur(8px); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-[#0a0f1a]">
+    <!-- Background -->
+    <div class="absolute inset-0 z-0">
+        <img src="{% static 'images/one.jpg' %}" alt="" class="w-full h-full object-cover opacity-30">
+        <div class="absolute inset-0 bg-gradient-to-b from-[#0a0f1a]/80 to-[#0a0f1a]"></div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-sm mx-auto px-4">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <a href="https://forgeforthafrica.com" class="inline-block">
+                <img src="{% static 'images/logo.png' %}" alt="ForgeForth Africa" class="h-24 w-auto">
+            </a>
+        </div>
+
+        <!-- Card - Glassmorphic 3D -->
+        <div class="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-7 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transform hover:translate-y-[-2px] transition-transform duration-300">
+            <!-- Subtle glow effect -->
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-2xl blur opacity-30"></div>
+
+            <div class="relative">
+                {% if error %}
+                <div class="mb-4 p-2.5 rounded-lg text-xs bg-red-900/30 text-red-400 border border-red-800/50">
+                    {{ error }}
+                </div>
+                {% endif %}
+
+                {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                    <div class="p-2.5 rounded-lg text-xs {% if message.tags == 'error' %}bg-red-900/30 text-red-400 border border-red-800/50{% else %}bg-green-900/30 text-green-400 border border-green-800/50{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div id="errorMsg" class="hidden mb-4 p-2.5 rounded-lg text-xs bg-red-900/30 text-red-400 border border-red-800/50"></div>
+
+                <form id="loginForm" method="POST" action="{% url 'data-login' %}">
+                    {% csrf_token %}
+                    {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}">
+                    {% endif %}
+
+                    <div class="mb-4">
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1.5">Username</label>
+                        <input type="text" name="username" required autocomplete="username"
+                            class="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-white/10 transition-all"
+                            placeholder="Enter username">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1.5">Password</label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" required autocomplete="current-password"
+                                class="w-full px-3 py-2.5 pr-10 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-white/10 transition-all"
+                                placeholder="••••••••">
+                            <button type="button" id="togglePwd" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                                <svg id="eyeOpen" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                <svg id="eyeClosed" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between mb-5">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="remember" name="remember" class="w-3.5 h-3.5 rounded bg-white/5 border-white/20 text-purple-500 focus:ring-0 focus:ring-offset-0">
+                            <span class="text-gray-400 text-xs">Remember me</span>
+                        </label>
+                    </div>
+
+                    <!-- Buttons Row -->
+                    <div class="flex gap-3">
+                        <!-- Login Button -->
+                        <button type="submit" id="submitBtn"
+                            class="flex-1 py-2.5 bg-white/10 hover:bg-white/15 backdrop-blur border border-white/20 text-white text-sm font-medium rounded-xl transition-all shadow-[0_4px_20px_rgba(255,255,255,0.1)] hover:shadow-[0_4px_25px_rgba(255,255,255,0.15)] hover:border-white/30 disabled:opacity-50 disabled:cursor-wait">
+                            <span id="btnText">Sign In</span>
+                            <span id="btnLoader" class="hidden">
+                                <svg class="w-4 h-4 mx-auto animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                </svg>
+                            </span>
+                        </button>
+
+                        <!-- Request Access Button -->
+                        <button type="button" onclick="openRequestModal()"
+                            class="py-2.5 px-4 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 text-purple-300 text-sm font-medium rounded-xl transition-all hover:border-purple-500/50">
+                            Request Access
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Info Box -->
+                <div class="mt-5 p-3 bg-purple-900/20 border border-purple-700/30 rounded-lg">
+                    <div class="flex items-start gap-2">
+                        <svg class="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                        </svg>
+                        <div>
+                            <p class="text-purple-400 text-[10px] font-medium mb-1">Data Layer Access</p>
+                            <p class="text-gray-500 text-[10px]">Secure database gateway. Authorized personnel only.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-6">
+            <a href="https://forgeforthafrica.com" class="text-gray-600 text-[10px] hover:text-gray-400 transition-colors">
+                ← forgeforthafrica.com
+            </a>
+        </div>
+        <p class="text-center text-gray-700 text-[10px] mt-2">&copy; {% now "Y" %} ForgeForth Africa</p>
+    </div>
+
+    <!-- Change Password Modal (for default password change) -->
+    <div id="changePasswordModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop bg-black/60">
+        <div class="relative bg-[#0d1321]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-sm mx-4 shadow-2xl">
+            <!-- Glow effect -->
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-amber-600/20 to-orange-600/20 rounded-2xl blur opacity-30"></div>
+
+            <div class="relative">
+                <!-- Header -->
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-semibold text-white">Change Password</h3>
+                        <p class="text-gray-500 text-[10px]">Please set a new password to continue</p>
+                    </div>
+                </div>
+
+                <!-- Warning -->
+                <div class="mb-4 p-2.5 bg-amber-900/20 border border-amber-700/30 rounded-lg">
+                    <p class="text-amber-400 text-[10px]">
+                        <svg class="w-3 h-3 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        You must change your default password before accessing the system.
+                    </p>
+                </div>
+
+                <form id="changePasswordForm" onsubmit="submitPasswordChange(event)">
+                    <input type="hidden" id="cpUsername" name="username">
+
+                    <div class="mb-3">
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Current Password</label>
+                        <div class="relative">
+                            <input type="password" id="cpCurrentPassword" name="current_password" required
+                                class="w-full px-3 py-2 pr-10 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-all"
+                                placeholder="Enter current password">
+                            <button type="button" onclick="togglePasswordField('cpCurrentPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">New Password</label>
+                        <div class="relative">
+                            <input type="password" id="cpNewPassword" name="new_password" required minlength="8"
+                                class="w-full px-3 py-2 pr-10 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-all"
+                                placeholder="Min 8 characters">
+                            <button type="button" onclick="togglePasswordField('cpNewPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Confirm New Password</label>
+                        <div class="relative">
+                            <input type="password" id="cpConfirmPassword" name="confirm_password" required minlength="8"
+                                class="w-full px-3 py-2 pr-10 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-amber-500/50 transition-all"
+                                placeholder="Repeat new password">
+                            <button type="button" onclick="togglePasswordField('cpConfirmPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="cpError" class="hidden mb-3 p-2 rounded-lg text-xs bg-red-900/30 text-red-400 border border-red-800/50"></div>
+                    <div id="cpSuccess" class="hidden mb-3 p-2 rounded-lg text-xs bg-green-900/30 text-green-400 border border-green-800/50"></div>
+
+                    <button type="submit" id="cpSubmitBtn"
+                        class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait">
+                        <span id="cpBtnText">Update Password</span>
+                        <span id="cpBtnLoader" class="hidden">
+                            <svg class="w-4 h-4 mx-auto animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Access Modal -->
+    <div id="requestModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop bg-black/60">
+        <div class="relative bg-[#0d1321]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <!-- Close button -->
+            <button onclick="closeRequestModal()" class="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <h3 class="text-lg font-semibold text-white mb-1">Request Access</h3>
+            <p class="text-gray-500 text-xs mb-5">Fill in your details to request Data Layer access</p>
+
+            <form id="requestForm" onsubmit="submitRequest(event)">
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div>
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Full Name *</label>
+                        <input type="text" name="full_name" required
+                            class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 transition-all"
+                            placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Email *</label>
+                        <input type="email" name="email" required
+                            class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 transition-all"
+                            placeholder="john@example.com">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div>
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Phone</label>
+                        <input type="tel" name="phone"
+                            class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 transition-all"
+                            placeholder="+27...">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Organization</label>
+                        <input type="text" name="organization"
+                            class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 transition-all"
+                            placeholder="Company name">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div>
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Job Title</label>
+                        <input type="text" name="job_title"
+                            class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 transition-all"
+                            placeholder="Developer">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Requested Role</label>
+                        <select name="requested_role"
+                            class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500/50 transition-all">
+                            <option value="viewer" class="bg-gray-900">Read-Only Viewer</option>
+                            <option value="developer" class="bg-gray-900">Developer</option>
+                            <option value="admin" class="bg-gray-900">Administrator</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Why do you need access? *</label>
+                    <textarea name="reason" required rows="2"
+                        class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 transition-all resize-none"
+                        placeholder="Explain your need for Data Layer access..."></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-400 text-[10px] uppercase tracking-wide mb-1">Intended Use</label>
+                    <textarea name="intended_use" rows="2"
+                        class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none focus:border-purple-500/50 transition-all resize-none"
+                        placeholder="How will you use the Data Layer?"></textarea>
+                </div>
+
+                <input type="hidden" name="service_type" value="data_layer">
+
+                <div id="requestError" class="hidden mb-3 p-2 rounded-lg text-xs bg-red-900/30 text-red-400 border border-red-800/50"></div>
+                <div id="requestSuccess" class="hidden mb-3 p-2 rounded-lg text-xs bg-green-900/30 text-green-400 border border-green-800/50"></div>
+
+                <button type="submit" id="requestSubmitBtn"
+                    class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-wait">
+                    <span id="requestBtnText">Submit Request</span>
+                    <span id="requestBtnLoader" class="hidden">
+                        <svg class="w-4 h-4 mx-auto animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // API Service URL - all frontend requests go through API Service for validation
+        const API_SERVICE_URL = 'http://localhost:9001';
+        // Data Layer URL - for session establishment
+        const DATA_LAYER_URL = window.location.origin;
+
+        // Toggle password visibility
+        const pwd = document.getElementById('password');
+        const toggleBtn = document.getElementById('togglePwd');
+        const eyeOpen = document.getElementById('eyeOpen');
+        const eyeClosed = document.getElementById('eyeClosed');
+
+        toggleBtn.addEventListener('click', () => {
+            const isPassword = pwd.type === 'password';
+            pwd.type = isPassword ? 'text' : 'password';
+            eyeOpen.classList.toggle('hidden', isPassword);
+            eyeClosed.classList.toggle('hidden', !isPassword);
+        });
+
+        // Generic toggle for password fields
+        function togglePasswordField(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = message;
+            errorEl.classList.remove('hidden');
+        }
+
+        // Remember me - save username to localStorage
+        const rememberCb = document.getElementById('remember');
+        const usernameInput = document.querySelector('input[name="username"]');
+
+        // Load saved username
+        const savedUsername = localStorage.getItem('ff_data_remembered_username');
+        if (savedUsername) {
+            usernameInput.value = savedUsername;
+            rememberCb.checked = true;
+        }
+
+        // Form submission - AJAX based to check for password change requirement
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const errorEl = document.getElementById('errorMsg');
+
+            // Handle remember me
+            if (rememberCb.checked) {
+                localStorage.setItem('ff_data_remembered_username', usernameInput.value);
+            } else {
+                localStorage.removeItem('ff_data_remembered_username');
+            }
+
+            // Show loading
+            btn.disabled = true;
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+            errorEl.classList.add('hidden');
+
+            const formData = new FormData(this);
+            const username = formData.get('username');
+            const password = formData.get('password');
+
+            try {
+                // Step 1: Call API Service for authentication (validates and forwards to Data Layer)
+                const response = await fetch(`${API_SERVICE_URL}/api/v1/data-layer/auth/login/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Check if password change is required
+                    if (result.requires_password_change) {
+                        // Show password change modal
+                        document.getElementById('cpUsername').value = username;
+                        document.getElementById('cpCurrentPassword').value = password;
+                        openChangePasswordModal();
+                    } else {
+                        // Step 2: Establish session on Data Layer
+                        try {
+                            await fetch(`${DATA_LAYER_URL}/ajax/login/`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                credentials: 'same-origin',
+                                body: JSON.stringify({ username, password }),
+                            });
+                        } catch (e) {
+                            console.log('Session setup:', e);
+                        }
+
+                        // Login successful - redirect to docs dashboard
+                        const next = formData.get('next') || result.redirect_url || '/docs/';
+                        window.location.href = next;
+                    }
+                } else {
+                    showError(result.error || 'Login failed');
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                showError('Connection error. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btnText.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+            }
+        });
+
+        // Change Password Modal functions
+        function openChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+            document.getElementById('changePasswordModal').classList.add('flex');
+            document.getElementById('cpError').classList.add('hidden');
+            document.getElementById('cpSuccess').classList.add('hidden');
+            document.getElementById('cpNewPassword').value = '';
+            document.getElementById('cpConfirmPassword').value = '';
+        }
+
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.add('hidden');
+            document.getElementById('changePasswordModal').classList.remove('flex');
+        }
+
+        // Submit password change
+        async function submitPasswordChange(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('cpSubmitBtn');
+            const btnText = document.getElementById('cpBtnText');
+            const btnLoader = document.getElementById('cpBtnLoader');
+            const errorEl = document.getElementById('cpError');
+            const successEl = document.getElementById('cpSuccess');
+
+            const username = document.getElementById('cpUsername').value;
+            const currentPassword = document.getElementById('cpCurrentPassword').value;
+            const newPassword = document.getElementById('cpNewPassword').value;
+            const confirmPassword = document.getElementById('cpConfirmPassword').value;
+
+            // Validate
+            if (newPassword !== confirmPassword) {
+                errorEl.textContent = 'New passwords do not match';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            if (newPassword.length < 8) {
+                errorEl.textContent = 'Password must be at least 8 characters';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            // Reset messages
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
+
+            // Show loading
+            btn.disabled = true;
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+
+            try {
+                // Call API Service which forwards to Data Layer
+                const response = await fetch(`${API_SERVICE_URL}/api/v1/data-layer/auth/change-password/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        current_password: currentPassword,
+                        new_password: newPassword,
+                        confirm_password: confirmPassword
+                    }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    successEl.textContent = 'Password changed successfully! Redirecting...';
+                    successEl.classList.remove('hidden');
+
+                    // Auto login with new password after 2 seconds
+                    setTimeout(async () => {
+                        try {
+                            // Step 1: Login through API Service
+                            const loginResponse = await fetch(`${API_SERVICE_URL}/api/v1/data-layer/auth/login/`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({ username, password: newPassword }),
+                            });
+
+                            const loginResult = await loginResponse.json();
+                            if (loginResult.success && !loginResult.requires_password_change) {
+                                // Step 2: Establish session on Data Layer
+                                try {
+                                    await fetch(`${DATA_LAYER_URL}/ajax/login/`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        credentials: 'same-origin',
+                                        body: JSON.stringify({ username, password: newPassword }),
+                                    });
+                                } catch (e) {
+                                    console.log('Session setup:', e);
+                                }
+
+                                // Redirect to docs dashboard
+                                window.location.href = loginResult.redirect_url || '/docs/';
+                            } else {
+                                closeChangePasswordModal();
+                            }
+                        } catch (err) {
+                            window.location.href = '/docs/';
+                        }
+                    }, 2000);
+                } else {
+                    errorEl.textContent = result.error || 'Failed to change password';
+                    errorEl.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('Password change error:', err);
+                errorEl.textContent = 'Connection error. Please try again.';
+                errorEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btnText.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+            }
+        }
+
+        // Modal functions
+        function openRequestModal() {
+            document.getElementById('requestModal').classList.remove('hidden');
+            document.getElementById('requestModal').classList.add('flex');
+            document.getElementById('requestForm').reset();
+            document.getElementById('requestError').classList.add('hidden');
+            document.getElementById('requestSuccess').classList.add('hidden');
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestModal').classList.add('hidden');
+            document.getElementById('requestModal').classList.remove('flex');
+        }
+
+        // Submit access request
+        async function submitRequest(e) {
+            e.preventDefault();
+            const form = e.target;
+            const btn = document.getElementById('requestSubmitBtn');
+            const btnText = document.getElementById('requestBtnText');
+            const btnLoader = document.getElementById('requestBtnLoader');
+            const errorEl = document.getElementById('requestError');
+            const successEl = document.getElementById('requestSuccess');
+
+            // Reset messages
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
+
+            // Show loading
+            btn.disabled = true;
+            btnText.classList.add('hidden');
+            btnLoader.classList.remove('hidden');
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                // Call API Service which forwards to Data Layer
+                const response = await fetch(`${API_SERVICE_URL}/api/v1/data-layer/access-requests/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    successEl.textContent = result.message || 'Your request has been submitted successfully!';
+                    successEl.classList.remove('hidden');
+                    form.reset();
+
+                    // Close modal after 3 seconds
+                    setTimeout(() => {
+                        closeRequestModal();
+                    }, 3000);
+                } else {
+                    errorEl.textContent = result.error || 'Failed to submit request';
+                    errorEl.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('Request error:', err);
+                errorEl.textContent = 'Connection error. Please try again later.';
+                errorEl.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btnText.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
+            }
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('requestModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRequestModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeRequestModal();
+            }
+        });
+
+        // Show error
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
+

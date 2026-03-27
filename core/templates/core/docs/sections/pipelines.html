@@ -1,0 +1,526 @@
+<!-- Pipelines Section -->
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="orbitron text-2xl font-bold flex items-center gap-3">
+            <span class="text-teal-400">⚡</span>
+            Data Pipelines
+        </h2>
+        <p class="text-gray-400 mt-1">Data processing, validation, and transformation pipelines</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="text-[10px] px-2 py-1 rounded bg-amber-500/20 text-amber-400">Test Mode</span>
+        <span class="text-[10px] px-2 py-1 rounded bg-emerald-500/20 text-emerald-400">Uses Test DB</span>
+    </div>
+</div>
+
+<!-- Pipeline Architecture -->
+<div class="glass-card rounded-2xl p-6 mb-6">
+    <h3 class="font-semibold text-lg mb-4">Request Processing Pipeline</h3>
+    <div class="relative">
+        <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 via-violet-500 to-green-500 transform -translate-y-1/2"></div>
+        <div class="grid grid-cols-6 gap-4 relative">
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-cyan-500/20 border-2 border-cyan-500 flex items-center justify-center mb-2 relative z-10">
+                    <span>1</span>
+                </div>
+                <p class="text-xs font-medium">Receive</p>
+                <p class="text-[10px] text-gray-500">API Service</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-yellow-500/20 border-2 border-yellow-500 flex items-center justify-center mb-2 relative z-10">
+                    <span>2</span>
+                </div>
+                <p class="text-xs font-medium">Verify</p>
+                <p class="text-[10px] text-gray-500">Signature</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-blue-500/20 border-2 border-blue-500 flex items-center justify-center mb-2 relative z-10">
+                    <span>3</span>
+                </div>
+                <p class="text-xs font-medium">Validate</p>
+                <p class="text-[10px] text-gray-500">Schema</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-violet-500/20 border-2 border-violet-500 flex items-center justify-center mb-2 relative z-10">
+                    <span>4</span>
+                </div>
+                <p class="text-xs font-medium">Transform</p>
+                <p class="text-[10px] text-gray-500">Data</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-emerald-500/20 border-2 border-emerald-500 flex items-center justify-center mb-2 relative z-10">
+                    <span>5</span>
+                </div>
+                <p class="text-xs font-medium">Persist</p>
+                <p class="text-[10px] text-gray-500">Database</p>
+            </div>
+            <div class="text-center">
+                <div class="w-12 h-12 mx-auto rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center mb-2 relative z-10">
+                    <span>6</span>
+                </div>
+                <p class="text-xs font-medium">Audit</p>
+                <p class="text-[10px] text-gray-500">Log</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Document Processing Pipeline with Test -->
+<div class="glass-card rounded-xl p-5 mb-4">
+    <div class="grid grid-cols-2 gap-6">
+        <!-- Left: Description -->
+        <div>
+            <h4 class="font-semibold text-blue-400 mb-4 flex items-center gap-2">
+                <span>📄</span>
+                Document Processing Pipeline
+            </h4>
+            <div class="space-y-3">
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-blue-500/20 flex items-center justify-center text-xs">1</div>
+                    <div>
+                        <p class="text-xs font-medium">Upload & Validate</p>
+                        <p class="text-[10px] text-gray-500">Check file type, size limits</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-yellow-500/20 flex items-center justify-center text-xs">2</div>
+                    <div>
+                        <p class="text-xs font-medium">Sanitization</p>
+                        <p class="text-[10px] text-gray-500">Remove malicious content, scripts</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-violet-500/20 flex items-center justify-center text-xs">3</div>
+                    <div>
+                        <p class="text-xs font-medium">Text Extraction</p>
+                        <p class="text-[10px] text-gray-500">OCR, PDF parsing</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-green-500/20 flex items-center justify-center text-xs">4</div>
+                    <div>
+                        <p class="text-xs font-medium">Storage</p>
+                        <p class="text-[10px] text-gray-500">Secure file storage</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                <p class="text-[10px] text-blue-400 font-medium mb-1">Supported Types</p>
+                <p class="text-[10px] text-gray-400">PDF, DOCX, DOC, TXT • Max: 10MB</p>
+            </div>
+        </div>
+        <!-- Right: Test Area -->
+        <div class="border-l border-white/10 pl-6">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium text-gray-400">Test Document Upload</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">POST</span>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Endpoint</label>
+                    <input type="text" value="/api/v1/media/documents/upload/" readonly
+                           class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-gray-400">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Select Document</label>
+                    <input type="file" id="test-doc-file" accept=".pdf,.docx,.doc,.txt"
+                           class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-gray-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-blue-500/20 file:text-blue-400">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Title (optional)</label>
+                    <input type="text" id="test-doc-title" placeholder="My Document"
+                           class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white placeholder-gray-600">
+                </div>
+                <button onclick="testDocumentUpload()"
+                        class="w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Run Test
+                </button>
+                <div id="doc-test-result" class="hidden p-3 rounded-lg bg-black/30 border border-white/10">
+                    <pre class="text-[10px] mono text-gray-400 overflow-x-auto"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Processing Pipeline with Test -->
+<div class="glass-card rounded-xl p-5 mb-4">
+    <div class="grid grid-cols-2 gap-6">
+        <!-- Left: Description -->
+        <div>
+            <h4 class="font-semibold text-pink-400 mb-4 flex items-center gap-2">
+                <span>🖼️</span>
+                Image Processing Pipeline
+            </h4>
+            <div class="space-y-3">
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-pink-500/20 flex items-center justify-center text-xs">1</div>
+                    <div>
+                        <p class="text-xs font-medium">Upload & Validate</p>
+                        <p class="text-[10px] text-gray-500">Check format, dimensions</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-yellow-500/20 flex items-center justify-center text-xs">2</div>
+                    <div>
+                        <p class="text-xs font-medium">Sanitization</p>
+                        <p class="text-[10px] text-gray-500">Strip EXIF, check for embedded code</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center text-xs">3</div>
+                    <div>
+                        <p class="text-xs font-medium">Compression</p>
+                        <p class="text-[10px] text-gray-500">Convert to WebP, 85%+ quality</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-green-500/20 flex items-center justify-center text-xs">4</div>
+                    <div>
+                        <p class="text-xs font-medium">Storage</p>
+                        <p class="text-[10px] text-gray-500">Generate thumbnails, store</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 p-3 rounded-lg bg-pink-500/10 border border-pink-500/20">
+                <p class="text-[10px] text-pink-400 font-medium mb-1">Output Specs</p>
+                <p class="text-[10px] text-gray-400">WebP format • 85%+ quality • Max: 1MB</p>
+            </div>
+        </div>
+        <!-- Right: Test Area -->
+        <div class="border-l border-white/10 pl-6">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium text-gray-400">Test Image Upload</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-pink-500/20 text-pink-400">POST</span>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Endpoint</label>
+                    <input type="text" value="/api/v1/media/images/upload/" readonly
+                           class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-gray-400">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Select Image</label>
+                    <input type="file" id="test-img-file" accept=".jpg,.jpeg,.png,.webp,.gif"
+                           class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-gray-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:bg-pink-500/20 file:text-pink-400">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Quality</label>
+                        <select id="test-img-quality" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                            <option value="85">85% (Default)</option>
+                            <option value="90">90%</option>
+                            <option value="95">95%</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Thumbnail</label>
+                        <select id="test-img-thumb" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                            <option value="true">Generate</option>
+                            <option value="false">Skip</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="testImageUpload()"
+                        class="w-full py-2 rounded-lg bg-pink-500/20 hover:bg-pink-500/30 border border-pink-500/30 text-pink-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Run Test
+                </button>
+                <div id="img-test-result" class="hidden p-3 rounded-lg bg-black/30 border border-white/10">
+                    <pre class="text-[10px] mono text-gray-400 overflow-x-auto"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Validation Pipeline with Test -->
+<div class="glass-card rounded-xl p-5 mb-4">
+    <div class="grid grid-cols-2 gap-6">
+        <!-- Left: Description -->
+        <div>
+            <h4 class="font-semibold text-amber-400 mb-4 flex items-center gap-2">
+                <span>✅</span>
+                Data Validation Pipeline
+            </h4>
+            <div class="space-y-3">
+                <div class="p-3 rounded-lg bg-white/[0.02]">
+                    <p class="text-xs font-medium text-cyan-400 mb-2">User Data Rules</p>
+                    <ul class="text-[10px] text-gray-500 space-y-1">
+                        <li>• Email: RFC 5322 compliant</li>
+                        <li>• Password: Min 8 chars, mixed case, number</li>
+                        <li>• Phone: E.164 format (+27...)</li>
+                    </ul>
+                </div>
+                <div class="p-3 rounded-lg bg-white/[0.02]">
+                    <p class="text-xs font-medium text-emerald-400 mb-2">Profile Rules</p>
+                    <ul class="text-[10px] text-gray-500 space-y-1">
+                        <li>• Bio: Max 500 characters</li>
+                        <li>• Skills: Max 20 items</li>
+                        <li>• Experience: Valid date ranges</li>
+                    </ul>
+                </div>
+                <div class="p-3 rounded-lg bg-white/[0.02]">
+                    <p class="text-xs font-medium text-violet-400 mb-2">Organization Rules</p>
+                    <ul class="text-[10px] text-gray-500 space-y-1">
+                        <li>• Name: 2-100 characters</li>
+                        <li>• Website: Valid URL format</li>
+                        <li>• Registration: Valid business number</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Right: Test Area -->
+        <div class="border-l border-white/10 pl-6">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium text-gray-400">Test Data Validation</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-400">POST</span>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Endpoint</label>
+                    <input type="text" value="/api/v1/validate/" readonly
+                           class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-gray-400">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Validation Type</label>
+                    <select id="test-val-type" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                        <option value="email">Email</option>
+                        <option value="phone">Phone Number</option>
+                        <option value="password">Password Strength</option>
+                        <option value="url">URL</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Value to Test</label>
+                    <input type="text" id="test-val-value" placeholder="Enter value..."
+                           class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white placeholder-gray-600">
+                </div>
+                <button onclick="testValidation()"
+                        class="w-full py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Validate
+                </button>
+                <div id="val-test-result" class="hidden p-3 rounded-lg bg-black/30 border border-white/10">
+                    <pre class="text-[10px] mono text-gray-400 overflow-x-auto"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Signature Verification Pipeline with Test -->
+<div class="glass-card rounded-xl p-5">
+    <div class="grid grid-cols-2 gap-6">
+        <!-- Left: Description -->
+        <div>
+            <h4 class="font-semibold text-indigo-400 mb-4 flex items-center gap-2">
+                <span>🔐</span>
+                Signature Verification Pipeline
+            </h4>
+            <div class="space-y-3">
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-indigo-500/20 flex items-center justify-center text-xs">1</div>
+                    <div>
+                        <p class="text-xs font-medium">Extract Headers</p>
+                        <p class="text-[10px] text-gray-500">X-Signature, X-Timestamp, X-Service-ID</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-violet-500/20 flex items-center justify-center text-xs">2</div>
+                    <div>
+                        <p class="text-xs font-medium">Verify Timestamp</p>
+                        <p class="text-[10px] text-gray-500">Within 5 minute window</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-cyan-500/20 flex items-center justify-center text-xs">3</div>
+                    <div>
+                        <p class="text-xs font-medium">Compute HMAC</p>
+                        <p class="text-[10px] text-gray-500">SHA-256 with shared secret</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+                    <div class="w-8 h-8 rounded bg-green-500/20 flex items-center justify-center text-xs">4</div>
+                    <div>
+                        <p class="text-xs font-medium">Compare</p>
+                        <p class="text-[10px] text-gray-500">Constant-time comparison</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right: Test Area -->
+        <div class="border-l border-white/10 pl-6">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-medium text-gray-400">Test Signature Generation</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400">POST</span>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Endpoint</label>
+                    <input type="text" value="/api/v1/sign/generate/" readonly
+                           class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-gray-400">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Payload (JSON)</label>
+                    <textarea id="test-sig-payload" rows="3" placeholder='{"action": "test", "data": {}}'
+                              class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white placeholder-gray-600 resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-500 block mb-1">Service ID</label>
+                    <select id="test-sig-service" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                        <option value="api-service">API Service</option>
+                        <option value="talent-portal">Talent Portal</option>
+                        <option value="admin-service">Admin Service</option>
+                        <option value="partner-portal">Partner Portal</option>
+                    </select>
+                </div>
+                <button onclick="testSignature()"
+                        class="w-full py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    Generate Signature
+                </button>
+                <div id="sig-test-result" class="hidden p-3 rounded-lg bg-black/30 border border-white/10">
+                    <pre class="text-[10px] mono text-gray-400 overflow-x-auto"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Functions Script -->
+<script>
+const TEST_BASE_URL = 'http://localhost:9005/api/v1';
+
+async function testDocumentUpload() {
+    const fileInput = document.getElementById('test-doc-file');
+    const title = document.getElementById('test-doc-title').value;
+    const resultDiv = document.getElementById('doc-test-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!fileInput.files[0]) {
+        showResult(resultDiv, resultPre, { error: 'Please select a document file' }, false);
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    if (title) formData.append('title', title);
+    formData.append('test_mode', 'true');
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Processing...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/media/documents/upload/`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testImageUpload() {
+    const fileInput = document.getElementById('test-img-file');
+    const quality = document.getElementById('test-img-quality').value;
+    const thumbnail = document.getElementById('test-img-thumb').value;
+    const resultDiv = document.getElementById('img-test-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!fileInput.files[0]) {
+        showResult(resultDiv, resultPre, { error: 'Please select an image file' }, false);
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('quality', quality);
+    formData.append('generate_thumbnail', thumbnail);
+    formData.append('test_mode', 'true');
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Processing...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/media/images/upload/`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testValidation() {
+    const type = document.getElementById('test-val-type').value;
+    const value = document.getElementById('test-val-value').value;
+    const resultDiv = document.getElementById('val-test-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!value) {
+        showResult(resultDiv, resultPre, { error: 'Please enter a value to validate' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Validating...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/validate/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type, value, test_mode: true })
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testSignature() {
+    const payload = document.getElementById('test-sig-payload').value;
+    const serviceId = document.getElementById('test-sig-service').value;
+    const resultDiv = document.getElementById('sig-test-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    let parsedPayload;
+    try {
+        parsedPayload = payload ? JSON.parse(payload) : {};
+    } catch {
+        showResult(resultDiv, resultPre, { error: 'Invalid JSON payload' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Generating signature...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/sign/generate/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payload: parsedPayload, service_id: serviceId, test_mode: true })
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+function showResult(div, pre, data, success) {
+    div.classList.remove('hidden');
+    div.classList.remove('border-green-500/30', 'border-red-500/30');
+    div.classList.add(success ? 'border-green-500/30' : 'border-red-500/30');
+    pre.textContent = JSON.stringify(data, null, 2);
+}
+</script>
+

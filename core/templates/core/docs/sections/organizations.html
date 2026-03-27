@@ -1,0 +1,795 @@
+<!-- Organizations Section -->
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="orbitron text-2xl font-bold flex items-center gap-3">
+            <span class="text-violet-400">🏢</span>
+            Organizations API
+        </h2>
+        <p class="text-gray-400 mt-1">Company profiles, members, and locations</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="text-[10px] px-2 py-1 rounded bg-amber-500/20 text-amber-400">Test Mode</span>
+        <span class="text-[10px] px-2 py-1 rounded bg-violet-500/20 text-violet-400 mono">/api/v1/organizations/</span>
+    </div>
+</div>
+
+<!-- Organization Management -->
+<div class="glass-card rounded-xl p-5 mb-4">
+    <h4 class="text-sm font-semibold text-violet-400 mb-4 flex items-center gap-2">
+        <span>🏢</span>
+        Organization Management
+    </h4>
+
+    <!-- POST Create Organization -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-create')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/organizations/</span>
+                <span class="text-[10px] text-gray-500">Create organization</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-create" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Request Body</p>
+                    <textarea id="org-create-body" rows="8" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "name": "TechCorp Africa",
+  "description": "Leading tech company...",
+  "industry": "Technology",
+  "website": "https://techcorp.co.za",
+  "email": "info@techcorp.co.za",
+  "phone": "+27123456789",
+  "country": "South Africa",
+  "test_mode": true
+}</textarea>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-create-result" class="h-40 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testEndpoint('POST', '/api/v1/organizations/', 'org-create-body', 'org-create-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET List Organizations -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-list')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/organizations/</span>
+                <span class="text-[10px] text-gray-500">List organizations</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-list" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Query Parameters</p>
+                    <div class="space-y-2">
+                        <div>
+                            <label class="text-[10px] text-gray-500 block mb-1">Page</label>
+                            <input type="number" id="org-list-page" value="1" min="1"
+                                   class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 block mb-1">Industry (optional)</label>
+                            <input type="text" id="org-list-industry" placeholder="e.g., Technology"
+                                   class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-list-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testListEndpoint('/api/v1/organizations/', ['org-list-page', 'org-list-industry'], ['page', 'industry'], 'org-list-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET Organization by ID -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-get')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/</span>
+                <span class="text-[10px] text-gray-500">Get organization</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-get" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-get-id" placeholder="Organization UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-get-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testGetEndpoint('/api/v1/organizations/', 'org-get-id', 'org-get-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PATCH Update Organization -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-update')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">PATCH</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/</span>
+                <span class="text-[10px] text-gray-500">Update organization</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-update" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="space-y-2">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-update-id" placeholder="Organization UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Request Body</label>
+                        <textarea id="org-update-body" rows="4" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "description": "Updated description",
+  "test_mode": true
+}</textarea>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-update-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testPatchEndpoint('/api/v1/organizations/', 'org-update-id', 'org-update-body', 'org-update-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE Organization -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-delete')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-red-500/20 text-red-400">DELETE</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/</span>
+                <span class="text-[10px] text-gray-500">Delete organization</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-violet-500/20 hover:bg-violet-500/30 text-violet-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-delete" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-delete-id" placeholder="Organization UUID to delete"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                    <p class="text-[10px] text-red-400 mt-2">⚠️ This action cannot be undone</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-delete-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testDeleteEndpoint('/api/v1/organizations/', 'org-delete-id', 'org-delete-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Members -->
+<div class="glass-card rounded-xl p-5 mb-4">
+    <h4 class="text-sm font-semibold text-blue-400 mb-4 flex items-center gap-2">
+        <span>👥</span>
+        Members
+    </h4>
+
+    <!-- POST Add Member -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-member-add')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/members/</span>
+                <span class="text-[10px] text-gray-500">Add member</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-member-add" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="space-y-2">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-member-add-org-id" placeholder="Organization UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Request Body</label>
+                        <textarea id="org-member-add-body" rows="4" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "user_id": "user-uuid",
+  "role": "admin",
+  "test_mode": true
+}</textarea>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-member-add-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testNestedEndpoint('POST', '/api/v1/organizations/', 'org-member-add-org-id', '/members/', 'org-member-add-body', 'org-member-add-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET List Members -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-member-list')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/members/</span>
+                <span class="text-[10px] text-gray-500">List members</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-member-list" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-member-list-id" placeholder="Organization UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-member-list-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testNestedGetEndpoint('/api/v1/organizations/', 'org-member-list-id', '/members/', 'org-member-list-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PATCH Update Member Role -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-member-update')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">PATCH</span>
+                <span class="mono text-xs">/api/v1/organizations/members/{member_id}/</span>
+                <span class="text-[10px] text-gray-500">Update member role</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-member-update" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="space-y-2">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Member ID (UUID)</label>
+                        <input type="text" id="org-member-update-id" placeholder="Member UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Request Body</label>
+                        <textarea id="org-member-update-body" rows="3" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "role": "manager",
+  "test_mode": true
+}</textarea>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-member-update-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testPatchEndpoint('/api/v1/organizations/members/', 'org-member-update-id', 'org-member-update-body', 'org-member-update-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE Remove Member -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-member-delete')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-red-500/20 text-red-400">DELETE</span>
+                <span class="mono text-xs">/api/v1/organizations/members/{member_id}/</span>
+                <span class="text-[10px] text-gray-500">Remove member</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-member-delete" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Member ID (UUID)</label>
+                        <input type="text" id="org-member-delete-id" placeholder="Member UUID to remove"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-member-delete-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testDeleteEndpoint('/api/v1/organizations/members/', 'org-member-delete-id', 'org-member-delete-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Locations -->
+<div class="glass-card rounded-xl p-5 mb-4">
+    <h4 class="text-sm font-semibold text-emerald-400 mb-4 flex items-center gap-2">
+        <span>📍</span>
+        Locations
+    </h4>
+
+    <!-- POST Add Location -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-location-add')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/locations/</span>
+                <span class="text-[10px] text-gray-500">Add location</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-location-add" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="space-y-2">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-location-add-org-id" placeholder="Organization UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Request Body</label>
+                        <textarea id="org-location-add-body" rows="5" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "address": "123 Main St",
+  "city": "Cape Town",
+  "country": "South Africa",
+  "is_headquarters": true,
+  "test_mode": true
+}</textarea>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-location-add-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testNestedEndpoint('POST', '/api/v1/organizations/', 'org-location-add-org-id', '/locations/', 'org-location-add-body', 'org-location-add-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET List Locations -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-location-list')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/locations/</span>
+                <span class="text-[10px] text-gray-500">List locations</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-location-list" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-location-list-id" placeholder="Organization UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-location-list-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testNestedGetEndpoint('/api/v1/organizations/', 'org-location-list-id', '/locations/', 'org-location-list-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE Remove Location -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-location-delete')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-red-500/20 text-red-400">DELETE</span>
+                <span class="mono text-xs">/api/v1/organizations/locations/{loc_id}/</span>
+                <span class="text-[10px] text-gray-500">Remove location</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-location-delete" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Location ID (UUID)</label>
+                        <input type="text" id="org-location-delete-id" placeholder="Location UUID to remove"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-location-delete-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testDeleteEndpoint('/api/v1/organizations/locations/', 'org-location-delete-id', 'org-location-delete-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Verification -->
+<div class="glass-card rounded-xl p-5">
+    <h4 class="text-sm font-semibold text-amber-400 mb-4 flex items-center gap-2">
+        <span>✅</span>
+        Verification
+    </h4>
+
+    <!-- POST Verify Organization -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-verify')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/verify/</span>
+                <span class="text-[10px] text-gray-500">Verify organization</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-verify" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-verify-id" placeholder="Organization UUID to verify"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-verify-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testNestedEndpoint('POST', '/api/v1/organizations/', 'org-verify-id', '/verify/', null, 'org-verify-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET Verification Status -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('org-verify-status')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/organizations/{id}/verification-status/</span>
+                <span class="text-[10px] text-gray-500">Check status</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="org-verify-status" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Organization ID (UUID)</label>
+                        <input type="text" id="org-verify-status-id" placeholder="Organization UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="org-verify-status-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testNestedGetEndpoint('/api/v1/organizations/', 'org-verify-status-id', '/verification-status/', 'org-verify-status-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Functions Script -->
+<script>
+const TEST_BASE_URL = 'http://localhost:9005/api/v1';
+
+function toggleEndpoint(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('hidden');
+}
+
+async function testEndpoint(method, endpoint, bodyId, resultId) {
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+    let body = null;
+
+    if (bodyId) {
+        try {
+            body = JSON.parse(document.getElementById(bodyId).value);
+            body.test_mode = true;
+        } catch (e) {
+            showResult(resultDiv, resultPre, { error: 'Invalid JSON' }, false);
+            return;
+        }
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${endpoint}`, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: body ? JSON.stringify(body) : null
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testGetEndpoint(baseEndpoint, idField, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}/?test_mode=true`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testPatchEndpoint(baseEndpoint, idField, bodyId, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    let body;
+    try {
+        body = JSON.parse(document.getElementById(bodyId).value);
+        body.test_mode = true;
+    } catch (e) {
+        showResult(resultDiv, resultPre, { error: 'Invalid JSON' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}/`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testDeleteEndpoint(baseEndpoint, idField, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Deleting...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}/?test_mode=true`, {
+            method: 'DELETE'
+        });
+        if (response.status === 204) {
+            showResult(resultDiv, resultPre, { success: true, message: 'Deleted successfully' }, true);
+        } else {
+            const data = await response.json();
+            showResult(resultDiv, resultPre, data, response.ok);
+        }
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testListEndpoint(endpoint, fieldIds, paramNames, resultId) {
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    const params = new URLSearchParams();
+    params.append('test_mode', 'true');
+
+    fieldIds.forEach((fieldId, index) => {
+        const value = document.getElementById(fieldId).value;
+        if (value) {
+            params.append(paramNames[index], value);
+        }
+    });
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${endpoint}?${params.toString()}`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testNestedEndpoint(method, baseEndpoint, idField, suffix, bodyId, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    let body = null;
+    if (bodyId) {
+        try {
+            body = JSON.parse(document.getElementById(bodyId).value);
+            body.test_mode = true;
+        } catch (e) {
+            showResult(resultDiv, resultPre, { error: 'Invalid JSON' }, false);
+            return;
+        }
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}${suffix}`, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: body ? JSON.stringify(body) : JSON.stringify({ test_mode: true })
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testNestedGetEndpoint(baseEndpoint, idField, suffix, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}${suffix}?test_mode=true`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+function showResult(div, pre, data, success) {
+    div.classList.remove('border-green-500/30', 'border-red-500/30');
+    div.classList.add(success ? 'border-green-500/30' : 'border-red-500/30');
+    pre.textContent = JSON.stringify(data, null, 2);
+}
+</script>
+

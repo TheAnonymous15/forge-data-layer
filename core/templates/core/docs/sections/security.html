@@ -1,0 +1,366 @@
+<!-- Security Section -->
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="orbitron text-2xl font-bold flex items-center gap-3">
+            <span class="text-rose-400">🔐</span>
+            Security & Request Signing
+        </h2>
+        <p class="text-gray-400 mt-1">HMAC-SHA256 request signing and security protocols</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="text-[10px] px-2 py-1 rounded bg-amber-500/20 text-amber-400">Test Mode</span>
+        <span class="text-[10px] px-2 py-1 rounded bg-rose-500/20 text-rose-400">Mandatory Signing</span>
+    </div>
+</div>
+
+<!-- Security Overview -->
+<div class="glass-card rounded-2xl p-6 mb-6 border-l-4 border-rose-500">
+    <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-rose-500/20 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+        </div>
+        <div>
+            <h3 class="font-semibold text-lg text-white">Mandatory Request Signing</h3>
+            <p class="text-gray-400 text-sm mt-1">
+                ALL requests to the Data Layer must be signed using HMAC-SHA256. Unsigned requests are rejected.
+                This ensures only authorized services (API Service) can access data.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Signing Process -->
+<div class="grid grid-cols-2 gap-6 mb-6">
+    <!-- Request Signing -->
+    <div class="glass-card rounded-xl p-5">
+        <h4 class="font-semibold text-blue-400 mb-4 flex items-center gap-2">
+            <span>📤</span>
+            Request Signing
+        </h4>
+        <div class="space-y-4">
+            <div class="code-container">
+                <p class="text-[10px] text-gray-500 mb-2">Required Headers</p>
+                <pre class="code-block text-xs p-3 rounded-lg bg-black/30 border border-white/10"><code>X-Service-ID: api_service
+X-Timestamp: 1711234567890
+X-Signature: base64(hmac_sha256(payload))</code></pre>
+            </div>
+            <div class="code-container">
+                <p class="text-[10px] text-gray-500 mb-2">Signature Calculation</p>
+                <pre class="code-block text-xs p-3 rounded-lg bg-black/30 border border-white/10"><code>payload = f"{method}|{path}|{timestamp}|{body_hash}"
+signature = hmac_sha256(secret_key, payload)
+header = base64_encode(signature)</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Response Signing -->
+    <div class="glass-card rounded-xl p-5">
+        <h4 class="font-semibold text-green-400 mb-4 flex items-center gap-2">
+            <span>📥</span>
+            Response Signing
+        </h4>
+        <div class="space-y-4">
+            <div class="code-container">
+                <p class="text-[10px] text-gray-500 mb-2">Response Headers</p>
+                <pre class="code-block text-xs p-3 rounded-lg bg-black/30 border border-white/10"><code>X-Response-Signature: base64(hmac_sha256(response))
+X-Response-Timestamp: 1711234567891</code></pre>
+            </div>
+            <div class="code-container">
+                <p class="text-[10px] text-gray-500 mb-2">Verify Response</p>
+                <pre class="code-block text-xs p-3 rounded-lg bg-black/30 border border-white/10"><code>expected = hmac_sha256(secret_key, response_body)
+if signature != expected:
+    raise SecurityError("Response tampered")</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Security Features -->
+<div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="glass-card rounded-xl p-4 text-center">
+        <div class="w-10 h-10 mx-auto rounded-lg bg-violet-500/20 flex items-center justify-center mb-3">
+            <span>⏱️</span>
+        </div>
+        <p class="text-sm font-medium">Timestamp Validation</p>
+        <p class="text-[10px] text-gray-500 mt-1">Requests valid for 5 minutes</p>
+    </div>
+    <div class="glass-card rounded-xl p-4 text-center">
+        <div class="w-10 h-10 mx-auto rounded-lg bg-amber-500/20 flex items-center justify-center mb-3">
+            <span>🔄</span>
+        </div>
+        <p class="text-sm font-medium">Replay Prevention</p>
+        <p class="text-[10px] text-gray-500 mt-1">Nonce + timestamp tracking</p>
+    </div>
+    <div class="glass-card rounded-xl p-4 text-center">
+        <div class="w-10 h-10 mx-auto rounded-lg bg-emerald-500/20 flex items-center justify-center mb-3">
+            <span>🔐</span>
+        </div>
+        <p class="text-sm font-medium">TLS Required</p>
+        <p class="text-[10px] text-gray-500 mt-1">All connections encrypted</p>
+    </div>
+</div>
+
+<!-- Signature Test Tool -->
+<div class="glass-card rounded-xl p-5 mb-6">
+    <h4 class="text-sm font-semibold text-indigo-400 mb-4 flex items-center gap-2">
+        <span>🧪</span>
+        Signature Test Tool
+    </h4>
+
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('sig-test')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/sign/generate/</span>
+                <span class="text-[10px] text-gray-500">Generate test signature</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="sig-test" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Payload (JSON)</label>
+                        <textarea id="sig-test-payload" rows="4" placeholder='{"action": "test", "data": {}}'
+                                  class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white placeholder-gray-600 resize-none">{
+  "action": "test",
+  "user_id": "test-user",
+  "test_mode": true
+}</textarea>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Service ID</label>
+                        <select id="sig-test-service" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                            <option value="api_service">API Service</option>
+                            <option value="talent_portal">Talent Portal</option>
+                            <option value="admin_service">Admin Service</option>
+                            <option value="partner_portal">Partner Portal</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Generated Signature</p>
+                    <div id="sig-test-result" class="h-40 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testSignature()"
+                            class="mt-2 w-full py-2 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>🔑</span> Generate Signature
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Verify Signature Tool -->
+<div class="glass-card rounded-xl p-5 mb-6">
+    <h4 class="text-sm font-semibold text-cyan-400 mb-4 flex items-center gap-2">
+        <span>✅</span>
+        Verify Signature
+    </h4>
+
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('sig-verify')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/sign/verify/</span>
+                <span class="text-[10px] text-gray-500">Verify a signature</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="sig-verify" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Payload (JSON)</label>
+                        <textarea id="sig-verify-payload" rows="3"
+                                  class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "action": "test"
+}</textarea>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Signature</label>
+                        <input type="text" id="sig-verify-signature" placeholder="base64 signature"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Timestamp</label>
+                        <input type="text" id="sig-verify-timestamp" placeholder="Unix timestamp"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Verification Result</p>
+                    <div id="sig-verify-result" class="h-40 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="verifySignature()"
+                            class="mt-2 w-full py-2 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 text-cyan-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>✅</span> Verify
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Service Authentication -->
+<div class="glass-card rounded-xl p-6 mb-6">
+    <h4 class="font-semibold text-amber-400 mb-4">Authorized Services</h4>
+    <div class="space-y-3">
+        <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                    <span class="text-xs">🔌</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium">API Service</p>
+                    <p class="text-[10px] text-gray-500 mono">service_id: api_service</p>
+                </div>
+            </div>
+            <span class="text-[10px] px-2 py-1 rounded-full bg-green-500/20 text-green-400">Authorized</span>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-violet-500/20 flex items-center justify-center">
+                    <span class="text-xs">🛠️</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium">Admin Service</p>
+                    <p class="text-[10px] text-gray-500 mono">service_id: admin_service</p>
+                </div>
+            </div>
+            <span class="text-[10px] px-2 py-1 rounded-full bg-green-500/20 text-green-400">Authorized</span>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/5 opacity-50">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gray-500/20 flex items-center justify-center">
+                    <span class="text-xs">🌐</span>
+                </div>
+                <div>
+                    <p class="text-sm font-medium">External Services</p>
+                    <p class="text-[10px] text-gray-500 mono">No direct access</p>
+                </div>
+            </div>
+            <span class="text-[10px] px-2 py-1 rounded-full bg-red-500/20 text-red-400">Blocked</span>
+        </div>
+    </div>
+</div>
+
+<!-- Error Codes -->
+<div class="glass-card rounded-xl p-6">
+    <h4 class="font-semibold text-rose-400 mb-4">Security Error Codes</h4>
+    <div class="grid grid-cols-2 gap-3">
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+            <span class="text-[10px] mono px-2 py-1 rounded bg-red-500/20 text-red-400">401</span>
+            <span class="text-xs">Missing or invalid signature</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+            <span class="text-[10px] mono px-2 py-1 rounded bg-red-500/20 text-red-400">403</span>
+            <span class="text-xs">Unauthorized service</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+            <span class="text-[10px] mono px-2 py-1 rounded bg-yellow-500/20 text-yellow-400">408</span>
+            <span class="text-xs">Request timestamp expired</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-white/[0.02]">
+            <span class="text-[10px] mono px-2 py-1 rounded bg-yellow-500/20 text-yellow-400">409</span>
+            <span class="text-xs">Replay attack detected</span>
+        </div>
+    </div>
+</div>
+
+<!-- Test Functions Script -->
+<script>
+const TEST_BASE_URL = 'http://localhost:9005/api/v1';
+
+function toggleEndpoint(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('hidden');
+}
+
+async function testSignature() {
+    const payload = document.getElementById('sig-test-payload').value;
+    const serviceId = document.getElementById('sig-test-service').value;
+    const resultDiv = document.getElementById('sig-test-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    let parsedPayload;
+    try {
+        parsedPayload = payload ? JSON.parse(payload) : {};
+    } catch {
+        showResult(resultDiv, resultPre, { error: 'Invalid JSON payload' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Generating signature...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/sign/generate/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                payload: parsedPayload,
+                service_id: serviceId,
+                test_mode: true
+            })
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function verifySignature() {
+    const payload = document.getElementById('sig-verify-payload').value;
+    const signature = document.getElementById('sig-verify-signature').value;
+    const timestamp = document.getElementById('sig-verify-timestamp').value;
+    const resultDiv = document.getElementById('sig-verify-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!signature || !timestamp) {
+        showResult(resultDiv, resultPre, { error: 'Signature and timestamp required' }, false);
+        return;
+    }
+
+    let parsedPayload;
+    try {
+        parsedPayload = payload ? JSON.parse(payload) : {};
+    } catch {
+        showResult(resultDiv, resultPre, { error: 'Invalid JSON payload' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Verifying signature...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/sign/verify/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                payload: parsedPayload,
+                signature: signature,
+                timestamp: timestamp,
+                test_mode: true
+            })
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+function showResult(div, pre, data, success) {
+    div.classList.remove('border-green-500/30', 'border-red-500/30');
+    div.classList.add(success ? 'border-green-500/30' : 'border-red-500/30');
+    pre.textContent = JSON.stringify(data, null, 2);
+}
+</script>
+

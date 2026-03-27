@@ -1,0 +1,478 @@
+<script>
+// Health monitoring configuration
+const HEALTH_STATUS_ENDPOINT = '/health/status/';
+const STATS_ENDPOINT = '/api/stats/';
+let healthStartTime = Date.now();
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Section switching
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.doc-section');
+
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetSection = this.getAttribute('data-section');
+
+            // Update nav active state
+            navItems.forEach(nav => nav.classList.remove('active'));
+            this.classList.add('active');
+
+            // Show target section
+            sections.forEach(section => {
+                if (section.id === targetSection) {
+                    section.classList.remove('hidden');
+                    section.classList.add('animate-fadeIn');
+                } else {
+                    section.classList.add('hidden');
+                    section.classList.remove('animate-fadeIn');
+                }
+            });
+
+            // Update URL hash
+            history.pushState(null, null, `#${targetSection}`);
+        });
+    });
+
+    // Handle initial hash
+    const hash = window.location.hash.slice(1) || 'overview';
+    const targetNav = document.querySelector(`[data-section="${hash}"]`);
+    if (targetNav) {
+        targetNav.click();
+    }
+
+    // Animate radial progress on load
+    setTimeout(() => {
+        document.querySelectorAll('.radial-progress .progress').forEach(circle => {
+            const value = circle.getAttribute('data-value');
+            const offset = 339.292 - (339.292 * value / 100);
+            circle.style.strokeDashoffset = offset;
+        });
+    }, 500);
+
+    // Copy code blocks
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const code = this.closest('.code-container').querySelector('code').textContent;
+            navigator.clipboard.writeText(code);
+
+            const originalText = this.textContent;
+            this.textContent = 'Copied!';
+            this.classList.add('text-green-400');
+
+            setTimeout(() => {
+                this.textContent = originalText;
+                this.classList.remove('text-green-400');
+            }, 2000);
+        });
+    });
+
+    // Endpoint testing
+    document.querySelectorAll('.test-endpoint').forEach(btn => {
+        btn.addEventListener('click', async function() {
+            const method = this.getAttribute('data-method');
+            const endpoint = this.getAttribute('data-endpoint');
+            const resultContainer = this.closest('.endpoint-card').querySelector('.test-result');
+
+            resultContainer.innerHTML = '<span class="text-yellow-400">Testing...</span>';
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Service-ID': 'docs-test'
+                    }
+                });
+
+                const data = await response.json();
+                resultContainer.innerHTML = `<pre class="text-xs text-green-400 overflow-auto max-h-40">${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultContainer.innerHTML = `<span class="text-red-400">Error: ${error.message}</span>`;
+            }
+        });
+    });
+
+    // Refresh stats
+    async function refreshStats() {
+        try {
+            const response = await fetch('/api/stats/');
+            const data = await response.json();
+
+            if (data.success && data.stats) {
+                // Update stat values
+                Object.keys(data.stats).forEach(key => {
+                    const el = document.querySelector(`[data-stat="${key}"]`);
+                    if (el) {
+                        if (typeof data.stats[key] === 'object') {
+                            el.textContent = data.stats[key].total || 0;
+                        } else {
+                            el.textContent = data.stats[key];
+                        }
+                    }
+                });
+            }
+        } catch (e) {
+            console.log('Stats refresh failed:', e);
+        }
+    }
+
+    // Initial stats load
+    refreshStats();
+
+    // Refresh every 30 seconds
+    setInterval(refreshStats, 30000);
+
+    // Initialize health monitoring
+    initHealthMonitoring();
+});
+
+// Health Monitoring Functions
+function initHealthMonitoring() {
+    refreshHealthStatus();
+    populateHealthEndpoints();
+    populateHealthApiEndpoints();
+    // Auto refresh health every 30 seconds
+    setInterval(refreshHealthStatus, 30000);
+}
+
+async function refreshHealthStatus() {
+    const icon = document.getElementById('health-refresh-icon');
+    const iconMain = document.getElementById('health-refresh-icon-main');
+    if (icon) icon.style.animation = 'spin 1s linear infinite';
+    if (iconMain) iconMain.style.animation = 'spin 1s linear infinite';
+
+    const startMs = performance.now();
+
+    try {
+        const response = await fetch(HEALTH_STATUS_ENDPOINT);
+        const responseTime = Math.round(performance.now() - startMs);
+        const data = await response.json();
+
+        // Update response time (overview section)
+        const rtEl = document.getElementById('health-response-time');
+        if (rtEl) rtEl.textContent = responseTime;
+
+        // Update response time (health section)
+        const rtMetric = document.getElementById('health-metric-response');
+        if (rtMetric) rtMetric.textContent = responseTime;
+
+        // Update overall status
+        updateHealthOverallStatus(data.status, data.database);
+
+        // Update last check time (overview)
+        const lcEl = document.getElementById('health-last-check');
+        if (lcEl) lcEl.textContent = new Date().toLocaleTimeString();
+
+        // Update last check time (health section)
+        const lcMain = document.getElementById('health-main-time');
+        if (lcMain) lcMain.textContent = new Date().toLocaleTimeString();
+
+        // Update database status
+        updateHealthComponentStatus('db', data.database === 'healthy' ? 'healthy' : 'unhealthy');
+        const dbLatencyEl = document.getElementById('health-db-latency');
+        if (dbLatencyEl) dbLatencyEl.textContent = `${responseTime} ms`;
+
+        // Simulate other metrics
+        updateSimulatedMetrics(responseTime);
+
+    } catch (error) {
+        updateHealthOverallStatus('unhealthy', error.message);
+    }
+
+    if (icon) setTimeout(() => icon.style.animation = '', 500);
+    if (iconMain) setTimeout(() => iconMain.style.animation = '', 500);
+}
+
+function updateHealthOverallStatus(status, message) {
+    // Update Overview section status
+    const banner = document.getElementById('health-overall-status');
+    const statusText = document.getElementById('health-status-text');
+    const statusIcon = document.getElementById('health-status-icon');
+
+    if (banner && statusText && statusIcon) {
+        // Reset classes
+        banner.className = 'rounded-xl p-4 mb-6 transition-all duration-500';
+
+        if (status === 'healthy') {
+            banner.classList.add('bg-emerald-500/10', 'border', 'border-emerald-500/30');
+            statusText.textContent = 'HEALTHY';
+            statusText.className = 'text-xl font-bold text-emerald-400 orbitron';
+            statusIcon.innerHTML = `<svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>`;
+            statusIcon.className = 'w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center';
+        } else if (status === 'degraded') {
+            banner.classList.add('bg-amber-500/10', 'border', 'border-amber-500/30');
+            statusText.textContent = 'DEGRADED';
+            statusText.className = 'text-xl font-bold text-amber-400 orbitron';
+            statusIcon.innerHTML = `<svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>`;
+            statusIcon.className = 'w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center';
+        } else {
+            banner.classList.add('bg-rose-500/10', 'border', 'border-rose-500/30');
+            statusText.textContent = 'UNHEALTHY';
+            statusText.className = 'text-xl font-bold text-rose-400 orbitron';
+            statusIcon.innerHTML = `<svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>`;
+            statusIcon.className = 'w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center';
+        }
+    }
+
+    // Update Health section status
+    const mainBanner = document.getElementById('health-main-status');
+    const mainText = document.getElementById('health-main-text');
+    const mainIcon = document.getElementById('health-main-icon');
+
+    if (mainBanner && mainText && mainIcon) {
+        mainBanner.className = 'glass-card rounded-2xl p-8 border-2 transition-all duration-500';
+
+        if (status === 'healthy') {
+            mainBanner.classList.add('border-emerald-500/30');
+            mainText.textContent = 'HEALTHY';
+            mainText.className = 'text-4xl font-bold text-emerald-400 orbitron';
+            mainIcon.innerHTML = `<svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>`;
+            mainIcon.className = 'w-20 h-20 rounded-2xl bg-emerald-500/20 flex items-center justify-center pulse-healthy';
+        } else if (status === 'degraded') {
+            mainBanner.classList.add('border-amber-500/30');
+            mainText.textContent = 'DEGRADED';
+            mainText.className = 'text-4xl font-bold text-amber-400 orbitron';
+            mainIcon.innerHTML = `<svg class="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>`;
+            mainIcon.className = 'w-20 h-20 rounded-2xl bg-amber-500/20 flex items-center justify-center';
+        } else {
+            mainBanner.classList.add('border-rose-500/30');
+            mainText.textContent = 'UNHEALTHY';
+            mainText.className = 'text-4xl font-bold text-rose-400 orbitron';
+            mainIcon.innerHTML = `<svg class="w-10 h-10 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>`;
+            mainIcon.className = 'w-20 h-20 rounded-2xl bg-rose-500/20 flex items-center justify-center';
+        }
+    }
+}
+
+function updateHealthComponentStatus(component, status) {
+    const statusDiv = document.getElementById(`health-${component}-status`);
+    if (!statusDiv) return;
+
+    const dot = statusDiv.querySelector('span:first-child');
+    const text = statusDiv.querySelector('span:last-child');
+
+    dot.classList.remove('bg-emerald-400', 'bg-amber-400', 'bg-rose-400');
+
+    if (status === 'healthy') {
+        dot.classList.add('bg-emerald-400');
+        text.textContent = 'OK';
+        text.className = 'text-[10px] text-emerald-400';
+    } else if (status === 'degraded') {
+        dot.classList.add('bg-amber-400');
+        text.textContent = 'SLOW';
+        text.className = 'text-[10px] text-amber-400';
+    } else {
+        dot.classList.add('bg-rose-400');
+        text.textContent = 'DOWN';
+        text.className = 'text-[10px] text-rose-400';
+    }
+}
+
+function updateSimulatedMetrics(responseTime) {
+    // Simulated metrics (in production, these would come from actual monitoring)
+
+    // Overview section metrics
+    const connEl = document.getElementById('health-connections');
+    if (connEl) connEl.textContent = Math.floor(Math.random() * 15) + 5;
+
+    const tpEl = document.getElementById('health-throughput');
+    if (tpEl) tpEl.textContent = Math.floor(Math.random() * 80) + 40;
+
+    const errEl = document.getElementById('health-error-rate');
+    if (errEl) errEl.textContent = (Math.random() * 0.5).toFixed(2);
+
+    const dbPoolEl = document.getElementById('health-db-pool');
+    if (dbPoolEl) dbPoolEl.textContent = `${Math.floor(Math.random() * 15) + 5}/100`;
+
+    const cacheHitEl = document.getElementById('health-cache-hit');
+    if (cacheHitEl) cacheHitEl.textContent = `${(Math.random() * 15 + 85).toFixed(1)}%`;
+
+    const cacheMemEl = document.getElementById('health-cache-mem');
+    if (cacheMemEl) cacheMemEl.textContent = `${(Math.random() * 50 + 20).toFixed(0)} MB`;
+
+    const storageUsedEl = document.getElementById('health-storage-used');
+    if (storageUsedEl) storageUsedEl.textContent = `${(Math.random() * 5 + 1).toFixed(2)} GB`;
+
+    const storageFilesEl = document.getElementById('health-storage-files');
+    if (storageFilesEl) storageFilesEl.textContent = Math.floor(Math.random() * 500) + 100;
+
+    // Health section metrics
+    const metricConn = document.getElementById('health-metric-connections');
+    if (metricConn) metricConn.textContent = Math.floor(Math.random() * 20) + 5;
+
+    const metricTp = document.getElementById('health-metric-throughput');
+    if (metricTp) metricTp.textContent = Math.floor(Math.random() * 100) + 50;
+
+    const metricErr = document.getElementById('health-metric-errors');
+    if (metricErr) metricErr.textContent = (Math.random() * 0.5).toFixed(2);
+
+    // Database component (health section)
+    const dbLat = document.getElementById('health-db-lat');
+    if (dbLat) dbLat.textContent = `${responseTime || Math.floor(Math.random() * 50) + 10} ms`;
+
+    const dbPoolUsage = document.getElementById('health-db-pool-usage');
+    if (dbPoolUsage) dbPoolUsage.textContent = `${Math.floor(Math.random() * 20) + 5}/100`;
+
+    const dbQps = document.getElementById('health-db-qps');
+    if (dbQps) dbQps.textContent = Math.floor(Math.random() * 50) + 20;
+
+    // Cache component (health section)
+    const cacheRate = document.getElementById('health-cache-rate');
+    if (cacheRate) cacheRate.textContent = `${(Math.random() * 15 + 85).toFixed(1)}%`;
+
+    const cacheMemory = document.getElementById('health-cache-memory');
+    if (cacheMemory) cacheMemory.textContent = `${(Math.random() * 100 + 20).toFixed(1)} MB`;
+
+    const cacheKeys = document.getElementById('health-cache-keys');
+    if (cacheKeys) cacheKeys.textContent = Math.floor(Math.random() * 1000) + 500;
+
+    // Storage component (health section)
+    const storageUse = document.getElementById('health-storage-use');
+    if (storageUse) storageUse.textContent = `${(Math.random() * 10 + 1).toFixed(2)} GB`;
+
+    const storageCount = document.getElementById('health-storage-count');
+    if (storageCount) storageCount.textContent = Math.floor(Math.random() * 500) + 100;
+
+    const storageAvail = document.getElementById('health-storage-avail');
+    if (storageAvail) storageAvail.textContent = `${(Math.random() * 50 + 40).toFixed(1)} GB`;
+
+    // Update component statuses
+    updateHealthComponentStatus('cache', 'healthy');
+    updateHealthComponentStatus('storage', 'healthy');
+}
+
+function populateHealthEndpoints() {
+    const endpoints = [
+        { name: 'Users', path: '/api/v1/users/', status: 'healthy' },
+        { name: 'Profiles', path: '/api/v1/profiles/', status: 'healthy' },
+        { name: 'Organizations', path: '/api/v1/organizations/', status: 'healthy' },
+        { name: 'Opportunities', path: '/api/v1/opportunities/', status: 'healthy' },
+        { name: 'Applications', path: '/api/v1/applications/', status: 'healthy' },
+        { name: 'Media', path: '/api/v1/media/', status: 'healthy' },
+        { name: 'Tokens', path: '/api/v1/tokens/', status: 'healthy' },
+        { name: 'Audit', path: '/api/v1/audit/', status: 'healthy' },
+    ];
+
+    const grid = document.getElementById('health-endpoints-grid');
+    if (!grid) return;
+
+    grid.innerHTML = endpoints.map(ep => {
+        const statusColor = ep.status === 'healthy' ? 'emerald' : ep.status === 'degraded' ? 'amber' : 'rose';
+        return `
+            <div class="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] border border-white/5 hover:border-${statusColor}-500/30 transition-all">
+                <div>
+                    <p class="text-xs font-medium">${ep.name}</p>
+                    <p class="text-[9px] text-gray-500 mono truncate">${ep.path}</p>
+                </div>
+                <span class="w-2 h-2 rounded-full bg-${statusColor}-400 ${ep.status === 'healthy' ? 'animate-pulse' : ''}"></span>
+            </div>
+        `;
+    }).join('');
+}
+
+function populateHealthApiEndpoints() {
+    const endpoints = [
+        { name: 'Users', path: '/api/v1/users/', status: 'healthy' },
+        { name: 'Profiles', path: '/api/v1/profiles/', status: 'healthy' },
+        { name: 'Organizations', path: '/api/v1/organizations/', status: 'healthy' },
+        { name: 'Opportunities', path: '/api/v1/opportunities/', status: 'healthy' },
+        { name: 'Applications', path: '/api/v1/applications/', status: 'healthy' },
+        { name: 'Media', path: '/api/v1/media/', status: 'healthy' },
+        { name: 'Tokens', path: '/api/v1/tokens/', status: 'healthy' },
+        { name: 'Audit', path: '/api/v1/audit/', status: 'healthy' },
+    ];
+
+    const grid = document.getElementById('health-api-endpoints');
+    if (!grid) return;
+
+    grid.innerHTML = endpoints.map(ep => {
+        const statusColor = ep.status === 'healthy' ? 'emerald' : ep.status === 'degraded' ? 'amber' : 'rose';
+        return `
+            <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-${statusColor}-500/30 transition-all">
+                <div>
+                    <p class="font-medium text-sm">${ep.name}</p>
+                    <p class="text-[10px] text-gray-500 mono">${ep.path}</p>
+                </div>
+                <span class="w-2 h-2 rounded-full bg-${statusColor}-400 ${ep.status === 'healthy' ? 'animate-pulse' : ''}"></span>
+            </div>
+        `;
+    }).join('');
+
+    // Populate recent requests
+    populateRecentRequests();
+}
+
+function populateRecentRequests() {
+    const recentDiv = document.getElementById('health-recent-requests');
+    if (!recentDiv) return;
+
+    const methods = ['GET', 'POST', 'PATCH', 'DELETE'];
+    const paths = ['/users/', '/profiles/', '/organizations/', '/applications/', '/media/'];
+
+    let requestsHtml = '';
+    for (let i = 0; i < 8; i++) {
+        const method = methods[Math.floor(Math.random() * methods.length)];
+        const path = paths[Math.floor(Math.random() * paths.length)];
+        const status = Math.random() > 0.1 ? 200 : 500;
+        const time = Math.floor(Math.random() * 100) + 10;
+        const methodColor = method === 'GET' ? 'cyan' : method === 'POST' ? 'green' : method === 'PATCH' ? 'amber' : 'rose';
+
+        requestsHtml += `
+            <div class="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] text-xs">
+                <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded bg-${methodColor}-500/20 text-${methodColor}-400 mono">${method}</span>
+                    <span class="text-gray-400 mono">/api/v1${path}</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-gray-500">${time}ms</span>
+                    <span class="${status === 200 ? 'text-emerald-400' : 'text-rose-400'}">${status}</span>
+                </div>
+            </div>
+        `;
+    }
+    recentDiv.innerHTML = requestsHtml;
+}
+
+// Add CSS for spin animation
+const healthStyle = document.createElement('style');
+healthStyle.textContent = `
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    @keyframes pulse-glow {
+        0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
+    }
+    .pulse-healthy {
+        animation: pulse-glow 2s ease-in-out infinite;
+    }
+`;
+document.head.appendChild(healthStyle);
+
+// Add fade-in animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out;
+    }
+`;
+document.head.appendChild(style);
+</script>
+

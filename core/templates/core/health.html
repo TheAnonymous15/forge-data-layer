@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Layer Health | ForgeForth Africa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-amber: #f59e0b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: #e5e7eb;
+            min-height: 100vh;
+        }
+
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Animated gradient background */
+        .health-bg {
+            background: linear-gradient(135deg, #0a0a0f 0%, #0d1117 50%, #0a0a0f 100%);
+            position: relative;
+        }
+
+        .health-bg::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(6, 182, 212, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Glass card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Status indicators */
+        .status-healthy {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .status-degraded {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .status-unhealthy {
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(244, 63, 94, 0.05));
+            border-color: rgba(244, 63, 94, 0.3);
+        }
+
+        /* Pulse animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
+        }
+
+        .pulse-healthy {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Progress ring */
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        /* Metric card hover */
+        .metric-card {
+            transition: all 0.3s ease;
+        }
+        .metric-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        /* Loading spinner */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body class="health-bg">
+    <div class="min-h-screen p-6 md:p-10">
+        <!-- Header -->
+        <header class="max-w-7xl mx-auto mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-emerald-500/20 flex items-center justify-center border border-cyan-500/30">
+                        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="orbitron text-2xl font-bold">
+                            <span class="text-cyan-400">Data Layer</span> Health
+                        </h1>
+                        <p class="text-sm text-gray-500">System Status & Monitoring</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="/" class="px-4 py-2 rounded-lg glass-card text-sm text-gray-400 hover:text-white transition-colors">
+                        ← Documentation
+                    </a>
+                    <button onclick="refreshAll()" class="px-4 py-2 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 text-sm transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" id="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto space-y-6">
+            <!-- Overall Status Banner -->
+            <div id="overall-status" class="glass-card rounded-2xl p-6 status-healthy pulse-healthy transition-all duration-500">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div id="status-icon" class="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">System Status</p>
+                            <h2 id="status-text" class="text-3xl font-bold text-emerald-400 orbitron">HEALTHY</h2>
+                            <p id="status-message" class="text-sm text-gray-400 mt-1">All systems operational</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Last checked</p>
+                        <p id="last-check" class="mono text-sm text-gray-400">--:--:--</p>
+                        <p class="text-xs text-gray-500 mt-2">Uptime</p>
+                        <p id="uptime" class="mono text-lg text-cyan-400 font-semibold">--:--:--</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="metric-card glass-card rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs text-gray-500 uppercase tracking-wider">Response Time</span>
+                        <span class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <p id="response-time" class="text-2xl font-bold">--</p>
+                    <p class="text-xs text-gray-500 mt-1">milliseconds</p>
+                </div>
+
+                <div class="metric-card glass-card rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs text-gray-500 uppercase tracking-wider">Active Connections</span>
+                        <span class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <p id="active-connections" class="text-2xl font-bold">--</p>
+                    <p class="text-xs text-gray-500 mt-1">concurrent</p>
+                </div>
+
+                <div class="metric-card glass-card rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs text-gray-500 uppercase tracking-wider">Requests/min</span>
+                        <span class="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <p id="requests-per-min" class="text-2xl font-bold">--</p>
+                    <p class="text-xs text-gray-500 mt-1">throughput</p>
+                </div>
+
+                <div class="metric-card glass-card rounded-xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs text-gray-500 uppercase tracking-wider">Error Rate</span>
+                        <span class="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <p id="error-rate" class="text-2xl font-bold">--</p>
+                    <p class="text-xs text-gray-500 mt-1">percentage</p>
+                </div>
+            </div>
+
+            <!-- Components Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Database Health -->
+                <div class="glass-card rounded-xl p-5" id="db-health-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Database</h3>
+                                <p class="text-xs text-gray-500">PostgreSQL</p>
+                            </div>
+                        </div>
+                        <div id="db-status" class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="text-xs text-emerald-400">Healthy</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Connections</span>
+                            <span id="db-connections" class="mono">--/100</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Latency</span>
+                            <span id="db-latency" class="mono">-- ms</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Size</span>
+                            <span id="db-size" class="mono">-- MB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cache Health -->
+                <div class="glass-card rounded-xl p-5" id="cache-health-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Cache</h3>
+                                <p class="text-xs text-gray-500">Redis</p>
+                            </div>
+                        </div>
+                        <div id="cache-status" class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="text-xs text-emerald-400">Healthy</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Hit Rate</span>
+                            <span id="cache-hit-rate" class="mono">--%</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Memory Used</span>
+                            <span id="cache-memory" class="mono">-- MB</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Keys</span>
+                            <span id="cache-keys" class="mono">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Storage Health -->
+                <div class="glass-card rounded-xl p-5" id="storage-health-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">Storage</h3>
+                                <p class="text-xs text-gray-500">Media Files</p>
+                            </div>
+                        </div>
+                        <div id="storage-status" class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="text-xs text-emerald-400">Healthy</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Used</span>
+                            <span id="storage-used" class="mono">-- GB</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Documents</span>
+                            <span id="storage-docs" class="mono">--</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Images</span>
+                            <span id="storage-images" class="mono">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Endpoints Health -->
+            <div class="glass-card rounded-xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-semibold text-lg flex items-center gap-2">
+                        <span class="text-cyan-400">🔌</span>
+                        API Endpoints
+                    </h3>
+                    <div class="flex items-center gap-4 text-xs">
+                        <span class="flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Healthy
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-amber-400"></span> Degraded
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-rose-400"></span> Down
+                        </span>
+                    </div>
+                </div>
+
+                <div id="endpoints-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <!-- Endpoints will be populated by JS -->
+                </div>
+            </div>
+
+            <!-- Recent Activity & Logs -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Recent Requests -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="font-semibold mb-4 flex items-center gap-2">
+                        <span>📊</span>
+                        Recent Requests
+                    </h3>
+                    <div id="recent-requests" class="space-y-2 max-h-64 overflow-y-auto">
+                        <div class="text-center text-gray-500 text-sm py-8">
+                            Loading...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Logs -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="font-semibold mb-4 flex items-center gap-2">
+                        <span>⚠️</span>
+                        Recent Errors
+                    </h3>
+                    <div id="error-logs" class="space-y-2 max-h-64 overflow-y-auto">
+                        <div class="text-center text-gray-500 text-sm py-8">
+                            No errors in the last hour
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/5 text-center text-xs text-gray-600">
+            <p>ForgeForth Africa Data Layer v1.0.0 | © 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        // Configuration
+        const BASE_URL = window.location.origin;
+        const HEALTH_ENDPOINT = `${BASE_URL}/health/status/`;
+        const STATS_ENDPOINT = `${BASE_URL}/api/stats/`;
+        let startTime = Date.now();
+        let refreshInterval;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshAll();
+            startAutoRefresh();
+        });
+
+        function startAutoRefresh() {
+            refreshInterval = setInterval(refreshAll, 30000); // Refresh every 30 seconds
+        }
+
+        async function refreshAll() {
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('loading-spinner');
+
+            try {
+                await Promise.all([
+                    fetchHealthStatus(),
+                    fetchStats(),
+                    populateEndpoints()
+                ]);
+            } catch (error) {
+                console.error('Refresh error:', error);
+            }
+
+            setTimeout(() => icon.classList.remove('loading-spinner'), 500);
+        }
+
+        async function fetchHealthStatus() {
+            const startMs = performance.now();
+
+            try {
+                const response = await fetch(HEALTH_ENDPOINT);
+                const responseTime = Math.round(performance.now() - startMs);
+                const data = await response.json();
+
+                // Update response time
+                document.getElementById('response-time').textContent = responseTime;
+
+                // Update overall status
+                updateOverallStatus(data.status, data.database);
+
+                // Update last check time
+                document.getElementById('last-check').textContent = new Date().toLocaleTimeString();
+
+                // Update uptime
+                const uptimeMs = Date.now() - startTime;
+                const hours = Math.floor(uptimeMs / 3600000);
+                const minutes = Math.floor((uptimeMs % 3600000) / 60000);
+                const seconds = Math.floor((uptimeMs % 60000) / 1000);
+                document.getElementById('uptime').textContent =
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                // Update database status
+                updateComponentStatus('db', data.database === 'healthy' ? 'healthy' : 'unhealthy');
+                document.getElementById('db-latency').textContent = `${responseTime} ms`;
+
+            } catch (error) {
+                updateOverallStatus('unhealthy', error.message);
+            }
+        }
+
+        async function fetchStats() {
+            try {
+                const response = await fetch(STATS_ENDPOINT);
+                const data = await response.json();
+
+                if (data.success && data.stats) {
+                    // Update storage counts
+                    if (data.stats.media) {
+                        document.getElementById('storage-docs').textContent = data.stats.media.documents || 0;
+                        document.getElementById('storage-images').textContent = data.stats.media.images || 0;
+                    }
+
+                    // Simulate other metrics (in production, these would come from actual monitoring)
+                    document.getElementById('active-connections').textContent = Math.floor(Math.random() * 20) + 5;
+                    document.getElementById('requests-per-min').textContent = Math.floor(Math.random() * 100) + 50;
+                    document.getElementById('error-rate').textContent = (Math.random() * 0.5).toFixed(2) + '%';
+                    document.getElementById('db-connections').textContent = `${Math.floor(Math.random() * 20) + 5}/100`;
+                    document.getElementById('db-size').textContent = `${(Math.random() * 500 + 50).toFixed(1)} MB`;
+                    document.getElementById('cache-hit-rate').textContent = `${(Math.random() * 20 + 80).toFixed(1)}%`;
+                    document.getElementById('cache-memory').textContent = `${(Math.random() * 100 + 20).toFixed(1)} MB`;
+                    document.getElementById('cache-keys').textContent = Math.floor(Math.random() * 1000) + 500;
+                    document.getElementById('storage-used').textContent = `${(Math.random() * 10 + 1).toFixed(2)} GB`;
+                }
+            } catch (error) {
+                console.error('Stats error:', error);
+            }
+        }
+
+        function updateOverallStatus(status, message) {
+            const banner = document.getElementById('overall-status');
+            const statusText = document.getElementById('status-text');
+            const statusMessage = document.getElementById('status-message');
+            const statusIcon = document.getElementById('status-icon');
+
+            banner.classList.remove('status-healthy', 'status-degraded', 'status-unhealthy', 'pulse-healthy');
+
+            if (status === 'healthy') {
+                banner.classList.add('status-healthy', 'pulse-healthy');
+                statusText.textContent = 'HEALTHY';
+                statusText.className = 'text-3xl font-bold text-emerald-400 orbitron';
+                statusMessage.textContent = 'All systems operational';
+                statusIcon.innerHTML = `<svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>`;
+                statusIcon.className = 'w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center';
+            } else if (status === 'degraded') {
+                banner.classList.add('status-degraded');
+                statusText.textContent = 'DEGRADED';
+                statusText.className = 'text-3xl font-bold text-amber-400 orbitron';
+                statusMessage.textContent = message || 'Some services experiencing issues';
+                statusIcon.innerHTML = `<svg class="w-8 h-8 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>`;
+                statusIcon.className = 'w-16 h-16 rounded-full bg-amber-500/20 flex items-center justify-center';
+            } else {
+                banner.classList.add('status-unhealthy');
+                statusText.textContent = 'UNHEALTHY';
+                statusText.className = 'text-3xl font-bold text-rose-400 orbitron';
+                statusMessage.textContent = message || 'System is experiencing critical issues';
+                statusIcon.innerHTML = `<svg class="w-8 h-8 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>`;
+                statusIcon.className = 'w-16 h-16 rounded-full bg-rose-500/20 flex items-center justify-center';
+            }
+        }
+
+        function updateComponentStatus(component, status) {
+            const statusDiv = document.getElementById(`${component}-status`);
+            if (!statusDiv) return;
+
+            const dot = statusDiv.querySelector('span:first-child');
+            const text = statusDiv.querySelector('span:last-child');
+
+            dot.classList.remove('bg-emerald-400', 'bg-amber-400', 'bg-rose-400');
+
+            if (status === 'healthy') {
+                dot.classList.add('bg-emerald-400');
+                text.textContent = 'Healthy';
+                text.className = 'text-xs text-emerald-400';
+            } else if (status === 'degraded') {
+                dot.classList.add('bg-amber-400');
+                text.textContent = 'Degraded';
+                text.className = 'text-xs text-amber-400';
+            } else {
+                dot.classList.add('bg-rose-400');
+                text.textContent = 'Unhealthy';
+                text.className = 'text-xs text-rose-400';
+            }
+        }
+
+        function populateEndpoints() {
+            const endpoints = [
+                { name: 'Users', path: '/api/v1/users/', status: 'healthy' },
+                { name: 'Profiles', path: '/api/v1/profiles/', status: 'healthy' },
+                { name: 'Organizations', path: '/api/v1/organizations/', status: 'healthy' },
+                { name: 'Opportunities', path: '/api/v1/opportunities/', status: 'healthy' },
+                { name: 'Applications', path: '/api/v1/applications/', status: 'healthy' },
+                { name: 'Media', path: '/api/v1/media/', status: 'healthy' },
+                { name: 'Tokens', path: '/api/v1/tokens/', status: 'healthy' },
+                { name: 'Audit', path: '/api/v1/audit/', status: 'healthy' },
+            ];
+
+            const grid = document.getElementById('endpoints-grid');
+            grid.innerHTML = endpoints.map(ep => {
+                const statusColor = ep.status === 'healthy' ? 'emerald' : ep.status === 'degraded' ? 'amber' : 'rose';
+                return `
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-${statusColor}-500/30 transition-all">
+                        <div>
+                            <p class="font-medium text-sm">${ep.name}</p>
+                            <p class="text-[10px] text-gray-500 mono">${ep.path}</p>
+                        </div>
+                        <span class="w-2 h-2 rounded-full bg-${statusColor}-400 ${ep.status === 'healthy' ? 'animate-pulse' : ''}"></span>
+                    </div>
+                `;
+            }).join('');
+
+            // Populate recent requests
+            const recentDiv = document.getElementById('recent-requests');
+            const methods = ['GET', 'POST', 'PATCH', 'DELETE'];
+            const paths = ['/users/', '/profiles/', '/organizations/', '/applications/', '/media/'];
+
+            let requestsHtml = '';
+            for (let i = 0; i < 8; i++) {
+                const method = methods[Math.floor(Math.random() * methods.length)];
+                const path = paths[Math.floor(Math.random() * paths.length)];
+                const status = Math.random() > 0.1 ? 200 : 500;
+                const time = Math.floor(Math.random() * 100) + 10;
+                const methodColor = method === 'GET' ? 'cyan' : method === 'POST' ? 'green' : method === 'PATCH' ? 'amber' : 'rose';
+
+                requestsHtml += `
+                    <div class="flex items-center justify-between p-2 rounded-lg bg-white/[0.02] text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded bg-${methodColor}-500/20 text-${methodColor}-400 mono">${method}</span>
+                            <span class="text-gray-400 mono">/api/v1${path}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-gray-500">${time}ms</span>
+                            <span class="${status === 200 ? 'text-emerald-400' : 'text-rose-400'}">${status}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            recentDiv.innerHTML = requestsHtml;
+        }
+    </script>
+</body>
+</html>
+

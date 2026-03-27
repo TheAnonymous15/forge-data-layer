@@ -1,0 +1,430 @@
+<!-- Audit Section -->
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="orbitron text-2xl font-bold flex items-center gap-3">
+            <span class="text-cyan-400">📊</span>
+            Audit Logs API
+        </h2>
+        <p class="text-gray-400 mt-1">System-wide activity logging and compliance tracking</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="text-[10px] px-2 py-1 rounded bg-amber-500/20 text-amber-400">Test Mode</span>
+        <span class="text-[10px] px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 mono">/api/v1/audit/</span>
+    </div>
+</div>
+
+<!-- Audit Info -->
+<div class="glass-card rounded-xl p-6 mb-6 border-l-4 border-cyan-500">
+    <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+        </div>
+        <div>
+            <h3 class="font-semibold text-lg text-white">Compliance & Security Logging</h3>
+            <p class="text-gray-400 text-sm mt-1">
+                Every data operation is logged with user, timestamp, action, and IP address for POPIA and GDPR compliance.
+                Logs are immutable and retained for 7 years.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Logged Actions -->
+<div class="grid grid-cols-4 gap-3 mb-6">
+    <div class="glass-card rounded-lg p-3 text-center">
+        <p class="text-lg font-bold text-green-400">CREATE</p>
+        <p class="text-[10px] text-gray-500">New records</p>
+    </div>
+    <div class="glass-card rounded-lg p-3 text-center">
+        <p class="text-lg font-bold text-blue-400">READ</p>
+        <p class="text-[10px] text-gray-500">Data access</p>
+    </div>
+    <div class="glass-card rounded-lg p-3 text-center">
+        <p class="text-lg font-bold text-yellow-400">UPDATE</p>
+        <p class="text-[10px] text-gray-500">Modifications</p>
+    </div>
+    <div class="glass-card rounded-lg p-3 text-center">
+        <p class="text-lg font-bold text-red-400">DELETE</p>
+        <p class="text-[10px] text-gray-500">Removals</p>
+    </div>
+</div>
+
+<!-- Audit Log Endpoints -->
+<div class="glass-card rounded-xl p-5">
+    <h4 class="text-sm font-semibold text-cyan-400 mb-4 flex items-center gap-2">
+        <span>📋</span>
+        Audit Log Endpoints
+    </h4>
+
+    <!-- POST Create Log -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('audit-create')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/audit/log/</span>
+                <span class="text-[10px] text-gray-500">Create audit log entry</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="audit-create" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Request Body</p>
+                    <textarea id="audit-create-body" rows="8" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "user_id": "user-uuid",
+  "action": "CREATE",
+  "entity_type": "profile",
+  "entity_id": "profile-uuid",
+  "service": "api_service",
+  "ip_address": "127.0.0.1",
+  "details": {"field": "bio", "new_value": "Updated"},
+  "test_mode": true
+}</textarea>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="audit-create-result" class="h-40 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testEndpoint('POST', '/api/v1/audit/log/', 'audit-create-body', 'audit-create-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Create Log
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET List Logs -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('audit-list')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/audit/logs/</span>
+                <span class="text-[10px] text-gray-500">List all logs (paginated)</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="audit-list" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Query Parameters</p>
+                    <div class="space-y-2">
+                        <div>
+                            <label class="text-[10px] text-gray-500 block mb-1">Page</label>
+                            <input type="number" id="audit-list-page" value="1" min="1"
+                                   class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 block mb-1">Start Date (optional)</label>
+                            <input type="date" id="audit-list-start"
+                                   class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 block mb-1">End Date (optional)</label>
+                            <input type="date" id="audit-list-end"
+                                   class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="audit-list-result" class="h-40 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testAuditList()"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Fetch Logs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET By User -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('audit-by-user')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/audit/logs/by-user/{user_id}/</span>
+                <span class="text-[10px] text-gray-500">Logs by user</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="audit-by-user" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">User ID (UUID)</label>
+                        <input type="text" id="audit-by-user-id" placeholder="User UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="audit-by-user-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testGetEndpoint('/api/v1/audit/logs/by-user/', 'audit-by-user-id', 'audit-by-user-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET By Action -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('audit-by-action')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/audit/logs/by-action/{action}/</span>
+                <span class="text-[10px] text-gray-500">Logs by action type</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="audit-by-action" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Action Type</label>
+                        <select id="audit-by-action-type" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                            <option value="CREATE">CREATE</option>
+                            <option value="READ">READ</option>
+                            <option value="UPDATE">UPDATE</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="audit-by-action-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testAuditByAction()"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET By Entity -->
+    <div class="border border-white/5 rounded-lg mb-3 overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('audit-by-entity')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/audit/logs/by-entity/{entity_type}/</span>
+                <span class="text-[10px] text-gray-500">Logs by entity</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="audit-by-entity" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Entity Type</label>
+                        <select id="audit-by-entity-type" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                            <option value="user">user</option>
+                            <option value="profile">profile</option>
+                            <option value="organization">organization</option>
+                            <option value="opportunity">opportunity</option>
+                            <option value="application">application</option>
+                            <option value="document">document</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="audit-by-entity-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testAuditByEntity()"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GET Stats -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('audit-stats')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/audit/stats/</span>
+                <span class="text-[10px] text-gray-500">Audit statistics</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="audit-stats" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">No parameters required</p>
+                    <p class="text-[10px] text-gray-400">Returns aggregated audit statistics</p>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="audit-stats-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testSimpleGet('/api/v1/audit/stats/', 'audit-stats-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Get Stats
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Functions Script -->
+<script>
+const TEST_BASE_URL = 'http://localhost:9005/api/v1';
+
+function toggleEndpoint(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('hidden');
+}
+
+async function testEndpoint(method, endpoint, bodyId, resultId) {
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+    let body = null;
+
+    if (bodyId) {
+        try {
+            body = JSON.parse(document.getElementById(bodyId).value);
+            body.test_mode = true;
+        } catch (e) {
+            showResult(resultDiv, resultPre, { error: 'Invalid JSON' }, false);
+            return;
+        }
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${endpoint}`, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: body ? JSON.stringify(body) : null
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testGetEndpoint(baseEndpoint, idField, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}/?test_mode=true`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testAuditList() {
+    const page = document.getElementById('audit-list-page').value;
+    const startDate = document.getElementById('audit-list-start').value;
+    const endDate = document.getElementById('audit-list-end').value;
+    const resultDiv = document.getElementById('audit-list-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    const params = new URLSearchParams({ page, test_mode: 'true' });
+    if (startDate) params.append('start_date', startDate);
+    if (endDate) params.append('end_date', endDate);
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/audit/logs/?${params.toString()}`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testAuditByAction() {
+    const action = document.getElementById('audit-by-action-type').value;
+    const resultDiv = document.getElementById('audit-by-action-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/audit/logs/by-action/${action}/?test_mode=true`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testAuditByEntity() {
+    const entity = document.getElementById('audit-by-entity-type').value;
+    const resultDiv = document.getElementById('audit-by-entity-result');
+    const resultPre = resultDiv.querySelector('pre');
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}/audit/logs/by-entity/${entity}/?test_mode=true`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testSimpleGet(endpoint, resultId) {
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${endpoint}?test_mode=true`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+function showResult(div, pre, data, success) {
+    div.classList.remove('border-green-500/30', 'border-red-500/30');
+    div.classList.add(success ? 'border-green-500/30' : 'border-red-500/30');
+    pre.textContent = JSON.stringify(data, null, 2);
+}
+</script>
+

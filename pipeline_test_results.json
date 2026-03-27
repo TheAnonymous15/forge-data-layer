@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-03-25T01:33:36.027510",
+  "test_email": "daniel.kinyua@tutamail.com",
+  "api_service_url": "http://localhost:9001",
+  "data_layer_url": "http://localhost:9005",
+  "steps": {
+    "api_service_health": {
+      "success": true
+    },
+    "data_layer_health": {
+      "success": true
+    },
+    "create_access_request": {
+      "success": true,
+      "request_id": "e84d672d-d7e9-45c3-a79b-6baaa35f78ef"
+    },
+    "approve_access_request": {
+      "success": true,
+      "request_id": "e84d672d-d7e9-45c3-a79b-6baaa35f78ef",
+      "user_created": true,
+      "username": "daniel.kinyua",
+      "notification_sent": true
+    }
+  }
+}

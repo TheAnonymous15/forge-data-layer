@@ -1,0 +1,537 @@
+<!-- Users Section -->
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="orbitron text-2xl font-bold flex items-center gap-3">
+            <span class="text-cyan-400">👤</span>
+            Users API
+        </h2>
+        <p class="text-gray-400 mt-1">User account management and authentication data</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="text-[10px] px-2 py-1 rounded bg-amber-500/20 text-amber-400">Test Mode</span>
+        <span class="text-[10px] px-2 py-1 rounded bg-cyan-500/20 text-cyan-400 mono">/api/v1/users/</span>
+    </div>
+</div>
+
+<!-- Endpoints List -->
+<div class="space-y-3">
+    <!-- Create User -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-create')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/users/</span>
+                <span class="text-[10px] text-gray-500">Create a new user account</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-create" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Request Body</p>
+                    <textarea id="user-create-body" rows="8" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "email": "user@example.com",
+  "password": "securePassword123",
+  "first_name": "John",
+  "last_name": "Doe",
+  "phone": "+27123456789",
+  "country": "South Africa",
+  "role": "talent",
+  "test_mode": true
+}</textarea>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-create-result" class="h-40 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testEndpoint('POST', '/api/v1/users/', 'user-create-body', 'user-create-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Get User -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-get')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/users/{id}/</span>
+                <span class="text-[10px] text-gray-500">Retrieve user by ID</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-get" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">User ID (UUID)</label>
+                        <input type="text" id="user-get-id" placeholder="e.g., 550e8400-e29b-41d4-a716-446655440000"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-get-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testGetEndpoint('/api/v1/users/', 'user-get-id', 'user-get-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update User -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-update')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-amber-500/20 text-amber-400">PATCH</span>
+                <span class="mono text-xs">/api/v1/users/{id}/</span>
+                <span class="text-[10px] text-gray-500">Update user information</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-update" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="space-y-2">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">User ID (UUID)</label>
+                        <input type="text" id="user-update-id" placeholder="User UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Request Body</label>
+                        <textarea id="user-update-body" rows="4" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "first_name": "Jane",
+  "last_name": "Smith",
+  "test_mode": true
+}</textarea>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-update-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testPatchEndpoint('/api/v1/users/', 'user-update-id', 'user-update-body', 'user-update-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verify Email -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-verify-email')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/users/verify-email/</span>
+                <span class="text-[10px] text-gray-500">Verify user email with token</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-verify-email" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Request Body</p>
+                    <textarea id="user-verify-email-body" rows="4" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "token": "verification-token-here",
+  "user_id": "user-uuid-here",
+  "test_mode": true
+}</textarea>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-verify-email-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testEndpoint('POST', '/api/v1/users/verify-email/', 'user-verify-email-body', 'user-verify-email-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-login')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/users/login/</span>
+                <span class="text-[10px] text-gray-500">Authenticate user and return tokens</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-login" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Request Body</p>
+                    <textarea id="user-login-body" rows="4" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "email": "user@example.com",
+  "password": "securePassword123",
+  "test_mode": true
+}</textarea>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-login-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testEndpoint('POST', '/api/v1/users/login/', 'user-login-body', 'user-login-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Get by Email -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-by-email')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/users/by-email/{email}/</span>
+                <span class="text-[10px] text-gray-500">Find user by email address</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-by-email" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Email Address</label>
+                        <input type="text" id="user-by-email-param" placeholder="user@example.com"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-by-email-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testGetEndpoint('/api/v1/users/by-email/', 'user-by-email-param', 'user-by-email-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- List Users -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-list')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-blue-500/20 text-blue-400">GET</span>
+                <span class="mono text-xs">/api/v1/users/</span>
+                <span class="text-[10px] text-gray-500">List all users (paginated)</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-list" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Query Parameters</p>
+                    <div class="space-y-2">
+                        <div>
+                            <label class="text-[10px] text-gray-500 block mb-1">Page</label>
+                            <input type="number" id="user-list-page" value="1" min="1"
+                                   class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 block mb-1">Role (optional)</label>
+                            <select id="user-list-role" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                                <option value="">All roles</option>
+                                <option value="talent">talent</option>
+                                <option value="organization">organization</option>
+                                <option value="admin">admin</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-500 block mb-1">Active Only</label>
+                            <select id="user-list-active" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs text-white">
+                                <option value="">All</option>
+                                <option value="true">Active only</option>
+                                <option value="false">Inactive only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-list-result" class="h-40 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testListEndpoint('/api/v1/users/', ['user-list-page', 'user-list-role', 'user-list-active'], ['page', 'role', 'is_active'], 'user-list-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 text-blue-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-change-password')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/users/{id}/change-password/</span>
+                <span class="text-[10px] text-gray-500">Change user password</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-change-password" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="space-y-2">
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">User ID (UUID)</label>
+                        <input type="text" id="user-change-password-id" placeholder="User UUID"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">Request Body</label>
+                        <textarea id="user-change-password-body" rows="4" class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white resize-none">{
+  "old_password": "currentPassword",
+  "new_password": "newSecurePassword123",
+  "test_mode": true
+}</textarea>
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-change-password-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testNestedEndpoint('POST', '/api/v1/users/', 'user-change-password-id', '/change-password/', 'user-change-password-body', 'user-change-password-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deactivate User -->
+    <div class="border border-white/5 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between p-3 bg-white/[0.02] cursor-pointer" onclick="toggleEndpoint('user-deactivate')">
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] font-mono px-2 py-1 rounded bg-green-500/20 text-green-400">POST</span>
+                <span class="mono text-xs">/api/v1/users/{id}/deactivate/</span>
+                <span class="text-[10px] text-gray-500">Deactivate user account</span>
+            </div>
+            <button class="text-[10px] px-3 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 transition-all">
+                Try it out
+            </button>
+        </div>
+        <div id="user-deactivate" class="hidden border-t border-white/5">
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Parameters</p>
+                    <div>
+                        <label class="text-[10px] text-gray-500 block mb-1">User ID (UUID)</label>
+                        <input type="text" id="user-deactivate-id" placeholder="User UUID to deactivate"
+                               class="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-xs mono text-white">
+                    </div>
+                </div>
+                <div>
+                    <p class="text-[10px] text-gray-500 mb-2">Response</p>
+                    <div id="user-deactivate-result" class="h-32 p-3 rounded-lg bg-black/30 border border-white/10 overflow-auto">
+                        <pre class="text-[10px] mono text-gray-400"></pre>
+                    </div>
+                    <button onclick="testNestedEndpoint('POST', '/api/v1/users/', 'user-deactivate-id', '/deactivate/', null, 'user-deactivate-result')"
+                            class="mt-2 w-full py-2 rounded-lg bg-green-500/20 hover:bg-green-500/30 border border-green-500/30 text-green-400 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <span>▶</span> Execute
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Functions Script -->
+<script>
+const TEST_BASE_URL = 'http://localhost:9005/api/v1';
+
+function toggleEndpoint(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('hidden');
+}
+
+async function testEndpoint(method, endpoint, bodyId, resultId) {
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+    let body = null;
+
+    if (bodyId) {
+        try {
+            body = JSON.parse(document.getElementById(bodyId).value);
+            body.test_mode = true;
+        } catch (e) {
+            showResult(resultDiv, resultPre, { error: 'Invalid JSON' }, false);
+            return;
+        }
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${endpoint}`, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: body ? JSON.stringify(body) : null
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testGetEndpoint(baseEndpoint, idField, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}/?test_mode=true`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testPatchEndpoint(baseEndpoint, idField, bodyId, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    let body;
+    try {
+        body = JSON.parse(document.getElementById(bodyId).value);
+        body.test_mode = true;
+    } catch (e) {
+        showResult(resultDiv, resultPre, { error: 'Invalid JSON' }, false);
+        return;
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}/`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testListEndpoint(endpoint, fieldIds, paramNames, resultId) {
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    const params = new URLSearchParams();
+    params.append('test_mode', 'true');
+
+    fieldIds.forEach((fieldId, index) => {
+        const value = document.getElementById(fieldId).value;
+        if (value) {
+            params.append(paramNames[index], value);
+        }
+    });
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${endpoint}?${params.toString()}`);
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+async function testNestedEndpoint(method, baseEndpoint, idField, suffix, bodyId, resultId) {
+    const id = document.getElementById(idField).value;
+    const resultDiv = document.getElementById(resultId);
+    const resultPre = resultDiv.querySelector('pre');
+
+    if (!id) {
+        showResult(resultDiv, resultPre, { error: 'Please enter an ID' }, false);
+        return;
+    }
+
+    let body = null;
+    if (bodyId) {
+        try {
+            body = JSON.parse(document.getElementById(bodyId).value);
+            body.test_mode = true;
+        } catch (e) {
+            showResult(resultDiv, resultPre, { error: 'Invalid JSON' }, false);
+            return;
+        }
+    }
+
+    try {
+        showResult(resultDiv, resultPre, { status: 'Loading...' }, true);
+        const response = await fetch(`${TEST_BASE_URL}${baseEndpoint}${id}${suffix}`, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: body ? JSON.stringify(body) : JSON.stringify({ test_mode: true })
+        });
+        const data = await response.json();
+        showResult(resultDiv, resultPre, data, response.ok);
+    } catch (error) {
+        showResult(resultDiv, resultPre, { error: error.message }, false);
+    }
+}
+
+function showResult(div, pre, data, success) {
+    div.classList.remove('border-green-500/30', 'border-red-500/30');
+    div.classList.add(success ? 'border-green-500/30' : 'border-red-500/30');
+    pre.textContent = JSON.stringify(data, null, 2);
+}
+</script>
+

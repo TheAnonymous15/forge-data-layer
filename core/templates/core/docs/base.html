@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Data Layer Documentation{% endblock %} | ForgeForth Africa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% include 'core/docs/partials/styles.html' %}
+</head>
+<body class="text-white grid-bg">
+    {% include 'core/docs/partials/svg_gradients.html' %}
+    {% include 'core/docs/partials/particles.html' %}
+
+    <div class="flex min-h-screen relative">
+        {% include 'core/docs/partials/sidebar.html' %}
+
+        <main class="ml-72 flex-1 p-8">
+            {% block content %}{% endblock %}
+            {% include 'core/docs/partials/footer.html' %}
+        </main>
+    </div>
+
+    {% include 'core/docs/partials/scripts.html' %}
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

@@ -1,0 +1,136 @@
+[2026-03-24 14:37:21,207] INFO data_layer.service_auth: Access request created: john.developer@example.com for api_service
+[2026-03-24 15:14:30,083] INFO data_layer.service_auth: Access request created: jane.smith@example.com for data_layer
+[2026-03-24 15:16:35,534] INFO data_layer.service_auth: Access request created: michael.brown@techcompany.com for api_service
+[2026-03-24 15:18:30,366] INFO data_layer.service_auth: Access request approved: john.developer@example.com
+[2026-03-25 00:22:13,891] INFO data_layer.service_auth: Access request created: daniel.kinyua@tutamail.com for api_service
+[2026-03-25 00:22:52,151] INFO data_layer.service_auth: Access request created: test@test.com for api_service
+[2026-03-25 00:53:37,903] INFO data_layer.service_auth: Access request created: muthikedaniel59@gmail.com for api_service
+[2026-03-25 00:53:37,908] ERROR data_layer.service_auth: Exception sending confirmation email to muthikedaniel59@gmail.com: no such table: email_logs
+[2026-03-25 01:03:01,684] INFO data_layer.service_auth: Access request created: muthikedaniel59@gmail.com for api_service
+[2026-03-25 01:03:01,686] ERROR data_layer.service_auth: Exception sending confirmation email to muthikedaniel59@gmail.com: no such table: email_logs
+[2026-03-25 01:13:48,722] INFO data_layer.communications: Email sent successfully to muthikedaniel59@gmail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 01:30:00,607] INFO data_layer.service_auth: Access request approved: muthikedaniel59@gmail.com
+[2026-03-25 01:30:04,972] INFO data_layer.communications: Email sent successfully to muthikedaniel59@gmail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 01:30:55,007] INFO data_layer.service_auth: Access request created: muthikedaniel59@gmail.com for api_service
+[2026-03-25 01:30:57,921] INFO data_layer.communications: Email sent successfully to muthikedaniel59@gmail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 01:30:57,940] ERROR data_layer.service_auth: Approve request error: UNIQUE constraint failed: api_service_users.email
+[2026-03-25 01:31:23,798] ERROR data_layer.service_auth: Approve request error: UNIQUE constraint failed: api_service_users.email
+[2026-03-25 01:31:36,668] ERROR data_layer.service_auth: Approve request error: UNIQUE constraint failed: api_service_users.email
+[2026-03-25 01:33:36,063] INFO data_layer.service_auth: Access request created: daniel.kinyua@tutamail.com for api_service
+[2026-03-25 01:33:39,187] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 01:33:39,203] INFO data_layer.service_auth: Access request approved: daniel.kinyua@tutamail.com
+[2026-03-25 01:33:41,506] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 02:43:00,241] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 02:44:00,934] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 02:46:53,706] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 02:50:24,740] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 02:51:40,899] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Update
+[2026-03-25 08:36:59,087] INFO data_layer: Data Layer access request created: daniel.kinyua@tutamail.com
+[2026-03-25 08:37:04,889] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 08:40:08,863] INFO data_layer: Data Layer access request created: daniel.kinyua@tutamail.com
+[2026-03-25 08:40:12,870] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 08:40:38,332] INFO data_layer: Data Layer access request approved: daniel.kinyua@tutamail.com
+[2026-03-25 08:40:42,220] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 08:41:57,472] INFO data_layer: Data Layer access request created: daniel.kinyua@tutamail.com
+[2026-03-25 08:42:01,751] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 08:42:01,781] INFO data_layer: Data Layer access request rejected: daniel.kinyua@tutamail.com
+[2026-03-25 08:42:01,781] WARNING data_layer: Failed to send rejection email: send_access_request_rejected() got an unexpected keyword argument 'reason'
+[2026-03-25 08:45:27,323] INFO data_layer: Data Layer access request created: daniel.kinyua@tutamail.com
+[2026-03-25 08:45:30,664] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 08:45:58,168] INFO data_layer: Data Layer access request rejected: daniel.kinyua@tutamail.com
+[2026-03-25 08:45:58,169] WARNING data_layer: Failed to send rejection email: send_access_request_rejected() got an unexpected keyword argument 'reason'
+[2026-03-25 08:48:59,556] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Update
+[2026-03-25 08:53:23,960] INFO data_layer: Data Layer access request created: daniel.kinyua@tutamail.com
+[2026-03-25 08:53:29,353] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 08:54:37,829] INFO data_layer: Data Layer access request rejected: daniel.kinyua@tutamail.com
+[2026-03-25 08:54:41,764] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Update
+[2026-03-25 10:03:33,766] INFO data_layer: Data Layer access request created: datatest@forgeforthafrica.com
+[2026-03-25 10:03:37,678] ERROR data_layer.communications: Failed to send email to datatest@forgeforthafrica.com: {'datatest@forgeforthafrica.com': (550, b'No such recipient here')}
+[2026-03-25 10:04:53,591] INFO data_layer: Data Layer access request approved: datatest@forgeforthafrica.com
+[2026-03-25 10:04:58,077] ERROR data_layer.communications: Failed to send email to datatest@forgeforthafrica.com: {'datatest@forgeforthafrica.com': (550, b'No such recipient here')}
+[2026-03-25 10:06:29,269] INFO data_layer: Data Layer password changed: datatest@forgeforthafrica.com
+[2026-03-25 10:09:14,553] INFO data_layer: Data Layer access request created: daniel.kinyua@tutamail.com
+[2026-03-25 10:09:18,019] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 10:09:55,978] INFO data_layer: Data Layer access request approved: daniel.kinyua@tutamail.com
+[2026-03-25 10:10:00,563] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 10:17:08,458] INFO data_layer: Data Layer password changed: daniel.kinyua@tutamail.com
+[2026-03-25 10:53:10,147] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 10:53:30,528] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 10:55:35,262] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: 🔐 Password Changed - ForgeForth Africa
+[2026-03-25 10:55:35,264] INFO data_layer.communications: Password changed email sent to daniel.kinyua@tutamail.com for api_service
+[2026-03-25 10:59:03,776] INFO data_layer: Data Layer access request created: daniel.kinyua@tutamail.com
+[2026-03-25 10:59:07,780] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 10:59:53,491] INFO data_layer: Data Layer access request created: test@test.com
+[2026-03-25 10:59:57,317] INFO data_layer.communications: Email sent successfully to test@test.com: ForgeForth Africa - Access Request Received
+[2026-03-25 11:00:42,042] INFO data_layer: Data Layer access request approved: daniel.kinyua@tutamail.com
+[2026-03-25 11:00:46,474] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 11:01:47,296] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: 🔐 Password Changed - ForgeForth Africa
+[2026-03-25 11:01:47,297] INFO data_layer.communications: Password changed email sent to daniel.kinyua@tutamail.com for data_layer
+[2026-03-25 11:01:47,297] INFO data_layer: Data Layer password changed: daniel.kinyua@tutamail.com
+[2026-03-25 11:05:32,720] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 11:05:37,723] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 11:05:42,442] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: 🔐 Password Changed - ForgeForth Africa
+[2026-03-25 11:05:42,443] INFO data_layer.communications: Password changed email sent to daniel.kinyua@tutamail.com for api_service
+[2026-03-25 11:05:42,462] INFO data_layer: Data Layer access request created: daniel.kinyua@tutamail.com
+[2026-03-25 11:05:46,949] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Received
+[2026-03-25 11:05:46,966] INFO data_layer: Data Layer access request approved: daniel.kinyua@tutamail.com
+[2026-03-25 11:05:51,792] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: ForgeForth Africa - Access Request Approved! 🎉
+[2026-03-25 11:05:55,799] INFO data_layer.communications: Email sent successfully to daniel.kinyua@tutamail.com: 🔐 Password Changed - ForgeForth Africa
+[2026-03-25 11:05:55,802] INFO data_layer.communications: Password changed email sent to daniel.kinyua@tutamail.com for data_layer
+[2026-03-25 11:05:55,802] INFO data_layer: Data Layer password changed: daniel.kinyua@tutamail.com
+[2026-03-26 09:21:58,151] INFO data_layer.authentication: New user registered: test@example.com
+[2026-03-26 09:22:06,413] INFO data_layer.authentication: User logged in: test@example.com
+[2026-03-26 09:22:31,190] INFO data_layer.authentication: New user registered: test2@example.com
+[2026-03-26 09:35:09,868] INFO data_layer.authentication: New user registered: newtest@example.com
+[2026-03-26 09:35:28,826] INFO data_layer.authentication: New user registered: apitest@example.com
+[2026-03-26 09:39:12,772] INFO data_layer.authentication: New user registered: fulltest@example.com
+[2026-03-26 09:45:26,591] INFO data_layer.authentication: New user registered: final_test@example.com
+[2026-03-26 09:48:42,778] INFO data_layer.authentication: New user registered: verified_test@example.com
+[2026-03-26 09:50:26,959] INFO data_layer.authentication: New user registered: daniel.kinyua@tutamail.com
+[2026-03-26 09:52:49,191] INFO data_layer.authentication: New user registered: gender_test@example.com
+[2026-03-26 10:23:33,771] INFO data_layer.authentication: New user registered: muthikedaniel59@gmail.com
+[2026-03-26 10:23:38,394] INFO data_layer.communications: Email sent successfully to muthikedaniel59@gmail.com: Verify Your Email - ForgeForth Africa
+[2026-03-26 10:23:38,394] INFO data_layer.authentication: Verification email sent to muthikedaniel59@gmail.com
+[2026-03-26 10:26:06,576] INFO data_layer.authentication: Email verified for: muthikedaniel59@gmail.com
+[2026-03-26 10:26:10,111] INFO data_layer.communications: Email sent successfully to muthikedaniel59@gmail.com: Welcome to ForgeForth Africa! 🎉
+[2026-03-26 10:26:10,111] INFO data_layer.authentication: Welcome email sent to muthikedaniel59@gmail.com
+[2026-03-26 10:27:07,829] INFO data_layer.authentication: New user registered: muthikedaniel159@gmail.com
+[2026-03-26 10:27:11,421] INFO data_layer.communications: Email sent successfully to muthikedaniel159@gmail.com: Verify Your Email - ForgeForth Africa
+[2026-03-26 10:27:11,422] INFO data_layer.authentication: Verification email sent to muthikedaniel159@gmail.com
+[2026-03-26 10:27:33,084] INFO data_layer.authentication: Email verified for: muthikedaniel159@gmail.com
+[2026-03-26 10:27:35,534] INFO data_layer.communications: Email sent successfully to muthikedaniel159@gmail.com: Welcome to ForgeForth Africa! 🎉
+[2026-03-26 10:27:35,535] INFO data_layer.authentication: Welcome email sent to muthikedaniel159@gmail.com
+[2026-03-26 10:29:03,343] INFO data_layer.authentication: User logged in: muthikedaniel159@gmail.com
+[2026-03-26 10:29:47,543] INFO data_layer.authentication: New user registered: programmerdk.dk@gmail.com
+[2026-03-26 10:29:50,096] INFO data_layer.communications: Email sent successfully to programmerdk.dk@gmail.com: Verify Your Email - ForgeForth Africa
+[2026-03-26 10:29:50,096] INFO data_layer.authentication: Verification email sent to programmerdk.dk@gmail.com
+[2026-03-26 10:30:13,265] INFO data_layer.authentication: Email verified for: programmerdk.dk@gmail.com
+[2026-03-26 10:30:16,388] INFO data_layer.communications: Email sent successfully to programmerdk.dk@gmail.com: Welcome to ForgeForth Africa! 🎉
+[2026-03-26 10:30:16,389] INFO data_layer.authentication: Welcome email sent to programmerdk.dk@gmail.com
+[2026-03-26 10:32:15,098] INFO data_layer.authentication: User logged in: programmerdk.dk@gmail.com
+[2026-03-26 10:34:22,597] INFO data_layer.authentication: User logged in: programmerdk.dk@gmail.com
+[2026-03-26 11:29:27,881] INFO data_layer.authentication: New user registered: partner.brand.new@forgeforth.com
+[2026-03-26 11:29:33,713] INFO data_layer.communications: Email sent successfully to partner.brand.new@forgeforth.com: Verify Your Email - ForgeForth Africa
+[2026-03-26 11:29:33,713] INFO data_layer.authentication: Verification email sent to partner.brand.new@forgeforth.com
+[2026-03-26 11:33:39,106] INFO data_layer.authentication: Partner registered: ceo@africatech.com for organization: Africa Tech Solutions
+[2026-03-26 11:33:44,656] INFO data_layer.communications: Email sent successfully to ceo@africatech.com: Verify Your Email - ForgeForth Africa
+[2026-03-26 11:33:44,656] INFO data_layer.authentication: Partner verification email sent to ceo@africatech.com
+[2026-03-26 11:34:07,307] INFO data_layer.authentication: Email verified for: ceo@africatech.com
+[2026-03-26 11:34:11,561] INFO data_layer.communications: Email sent successfully to ceo@africatech.com: Welcome to ForgeForth Africa! 🎉
+[2026-03-26 11:34:11,562] INFO data_layer.authentication: Welcome email sent to ceo@africatech.com
+[2026-03-26 11:34:26,516] INFO data_layer.authentication: User logged in: ceo@africatech.com
+[2026-03-26 13:12:19,881] INFO data_layer.authentication: Partner registered: daniel.kinya@tutamail.com for organization: LD TEchnologies
+[2026-03-26 13:12:24,656] INFO data_layer.communications: Email sent successfully to daniel.kinya@tutamail.com: Verify Your Email - ForgeForth Africa
+[2026-03-26 13:12:24,657] INFO data_layer.authentication: Partner verification email sent to daniel.kinya@tutamail.com
+[2026-03-26 14:30:14,257] ERROR data_layer.communications: Failed to send email to apitest@forgeforthafrica.com: {'apitest@forgeforthafrica.com': (550, b'No such recipient here')}
+[2026-03-26 14:30:14,258] INFO data_layer.communications: Password changed email sent to apitest@forgeforthafrica.com for api_service
+[2026-03-26 14:42:04,447] ERROR data_layer.communications: Failed to send email to datatest@forgeforthafrica.com: {'datatest@forgeforthafrica.com': (550, b'No such recipient here')}
+[2026-03-26 14:42:04,448] INFO data_layer.communications: Password changed email sent to datatest@forgeforthafrica.com for data_layer
+[2026-03-26 14:42:04,448] INFO data_layer: Data Layer password changed: datatest@forgeforthafrica.com
+[2026-03-26 14:56:07,362] INFO data_layer.core: Data Layer AJAX login successful for user: datatest@forgeforthafrica.com
+[2026-03-26 23:29:12,212] INFO data_layer.partner_auth: Password reset requested for non-existent partner email: daniel.kinyua@tutamail.com
+[2026-03-26 23:29:47,546] INFO data_layer.partner_auth: Password reset requested for non-existent partner email: demo@demo.com
+[2026-03-26 23:32:08,469] INFO data_layer.partner_auth: Password reset requested for non-existent partner email: demo@demo.com
+[2026-03-26 23:37:28,312] INFO data_layer.partner_auth: Password reset requested for non-existent partner email: patient@vitalnest.com
+[2026-03-26 23:38:43,578] INFO data_layer.partner_auth: Password reset requested for non-existent partner email: daniel.kinyua@tutamail.com
+[2026-03-26 23:39:42,614] INFO data_layer.partner_auth: Password reset requested for non-existent partner email: apitest@forgeforthafrica.com
